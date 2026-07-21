@@ -8,7 +8,7 @@ const response = {
   summary: "Entrada registrada.",
   narrative: "Una cronica breve.",
   stats: { arte: 0, tecnologia: 0, vitalidad: 1, social: 0, sabiduria: 0 },
-  newCharacters: [], newKnowledge: [], questsCompleted: [], bossDamage: [], activities: [], entitySuggestions: []
+  newCharacters: [], newKnowledge: [], contractEvidence: [], bossDamage: [], activities: [], entitySuggestions: []
 };
 
 test("accepts all five visible core statistics", () => {

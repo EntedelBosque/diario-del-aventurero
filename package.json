@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:core": "node --test tests/unit/process-diary-entry.test.ts tests/unit/oracle-response.test.ts tests/unit/progression.test.ts tests/unit/world-memory.test.ts"
+    "test:core": "node --test tests/unit/process-diary-entry.test.ts tests/unit/oracle-response.test.ts tests/unit/progression.test.ts tests/unit/world-memory.test.ts tests/unit/contracts.test.ts"
   }
 }

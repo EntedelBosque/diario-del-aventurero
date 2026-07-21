@@ -3,7 +3,7 @@ import type { DiaryEntry } from "../domain/diary-entry.ts";
 export type OracleContext = {
   activeStats: Record<string, number>;
   relevantEntities: Array<{ id: string; type: string; name: string; aliases: string[] }>;
-  activeQuestIds: string[];
+  activeContractIds: string[];
   activeBossIds: string[];
 };
 

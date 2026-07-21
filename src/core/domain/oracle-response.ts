@@ -13,7 +13,7 @@ export type OracleResponse = {
   newCharacters: Array<{ name: string; alias: string; role: string }>;
   newKnowledge: Array<{ name: string; category: string }>;
   contractEvidence: Array<{ contractId: string; rationale: string }>;
-  bossDamage: Array<{ boss_id: string; amount: number; source_stat: string }>;
+  bossDamage: Array<{ bossId: string; amount: number; sourceStat: string }>;
   activities: Array<{ scale: ActivityScale; durationMinutes: number; classifications: Array<{ stat: StatKey; weight: number }> }>;
   entitySuggestions: EntitySuggestion[];
 };
@@ -161,7 +161,7 @@ function readBossDamage(value: unknown, errors: string[]): OracleResponse["bossD
       errors.push(`bossDamage[${index}] must have a non-negative integer amount`);
       return [];
     }
-    return [{ boss_id: readText(item.boss_id, `bossDamage[${index}].boss_id`, errors), amount: Number(item.amount), source_stat: readText(item.source_stat, `bossDamage[${index}].source_stat`, errors) }];
+    return [{ bossId: readText(item.bossId, `bossDamage[${index}].bossId`, errors), amount: Number(item.amount), sourceStat: readText(item.sourceStat, `bossDamage[${index}].sourceStat`, errors) }];
   });
 }
 

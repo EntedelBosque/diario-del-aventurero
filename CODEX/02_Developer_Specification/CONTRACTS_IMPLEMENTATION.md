@@ -14,6 +14,10 @@ El Oraculo puede aportar evidencia relacionada, pero no puede crear, completar,
 fallar ni expirar contratos. Esas transiciones pertenecen exclusivamente al
 Motor y quedan registradas en `contract_history`.
 
+Las políticas RLS conceden al cliente solo lectura. Las escrituras del Motor se
+realizan en el backend con el rol de servicio y usan `version` para evitar que
+dos decisiones concurrentes reemplacen el mismo contrato silenciosamente.
+
 ## Vigencias iniciales
 
 - Diario: 24 horas.

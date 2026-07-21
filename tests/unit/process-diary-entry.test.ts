@@ -44,14 +44,14 @@ const validResponse = {
   summary: "Se registro una jornada de estudio.",
   narrative: "La cronica queda escrita.",
   stats: { arte: 0, tecnologia: 1, vitalidad: 0, social: 0, sabiduria: 0 },
-  newCharacters: [], newKnowledge: [], questsCompleted: [], bossDamage: [], activities: [], entitySuggestions: []
+  newCharacters: [], newKnowledge: [], contractEvidence: [], bossDamage: [], activities: [], entitySuggestions: []
 };
 
 test("records the fact before accepting a valid Oracle proposal", async () => {
   const entries = new MemoryDiaryEntries();
   const useCase = new ProcessDiaryEntry({
     diaryEntries: entries,
-    loadOracleContext: async () => ({ activeStats: {}, relevantEntities: [], activeQuestIds: [], activeBossIds: [] }),
+    loadOracleContext: async () => ({ activeStats: {}, relevantEntities: [], activeContractIds: [], activeBossIds: [] }),
     oracle: { interpret: async () => validResponse }
   });
 
@@ -66,7 +66,7 @@ test("keeps the fact and rejects malformed Oracle data", async () => {
   const entries = new MemoryDiaryEntries();
   const useCase = new ProcessDiaryEntry({
     diaryEntries: entries,
-    loadOracleContext: async () => ({ activeStats: {}, relevantEntities: [], activeQuestIds: [], activeBossIds: [] }),
+    loadOracleContext: async () => ({ activeStats: {}, relevantEntities: [], activeContractIds: [], activeBossIds: [] }),
     oracle: { interpret: async () => ({ summary: "incomplete" }) }
   });
 
@@ -81,7 +81,7 @@ test("returns the original result for a repeated idempotency key", async () => {
   let oracleCalls = 0;
   const useCase = new ProcessDiaryEntry({
     diaryEntries: entries,
-    loadOracleContext: async () => ({ activeStats: {}, relevantEntities: [], activeQuestIds: [], activeBossIds: [] }),
+    loadOracleContext: async () => ({ activeStats: {}, relevantEntities: [], activeContractIds: [], activeBossIds: [] }),
     oracle: { interpret: async () => { oracleCalls += 1; return validResponse; } }
   });
   const command = { id: "entry-3", playerId: "player-1", idempotencyKey: "request-3", text: "Practique", occurredAt: new Date(), submittedAt: new Date() };

@@ -19,6 +19,12 @@ test("only the Motor can complete a contract with registered evidence", () => {
   assert.equal(transitionContract(dailyContract(), "completado", ["event-1"]).state, "completado");
 });
 
+test("Oracle evidence is only a proposal until the Motor validates an event", () => {
+  const proposedEvidence = { contractId: "contract-1", rationale: "La entrada describe la caminata" };
+  assert.throws(() => transitionContract(dailyContract(), "completado"), /evidence/);
+  assert.equal(transitionContract(dailyContract(), "completado", ["world-event-1"]).id, proposedEvidence.contractId);
+});
+
 test("expiry does not erase the contract or its potential reward", () => {
   const expired = expireContractIfDue(dailyContract(), new Date("2026-07-22T00:00:00Z"));
   assert.equal(expired.state, "expirado");
