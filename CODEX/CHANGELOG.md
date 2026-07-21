@@ -1,8 +1,11 @@
 # Changelog - Diario de un Aventurero
 
+## [0.14.0] - 2026-07-21
+- Se agrega el Developer Specification como referencia tecnica operativa.
+- Se incorpora la migracion 012, validada contra PostgreSQL 16, que completa optimistic locking en ocho tablas mutables mediante un trigger generico.
+
 ## [0.13.0] - 2026-07-21
 - Se incorpora CODEX-010: seis gremios oficiales, experiencia proporcional, maestria permanente e historial independiente.
-- Se migran las identidades de gremio existentes y se asignan todos los gremios a cada Aventurero.
 
 ## [0.12.0] - 2026-07-21
 - Se incorpora CODEX-009: Director del Juego determinista, propuestas auditables y priorizacion de carga, recuperacion y balance.
