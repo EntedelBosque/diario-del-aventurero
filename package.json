@@ -1,9 +1,9 @@
 {
   "name": "diario-del-aventurero",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test:core": "node --test tests/unit/process-diary-entry.test.ts tests/unit/oracle-response.test.ts tests/unit/progression.test.ts tests/unit/world-memory.test.ts tests/unit/contracts.test.ts"
+    "test:core": "node --test tests/unit/process-diary-entry.test.ts tests/unit/oracle-response.test.ts tests/unit/progression.test.ts tests/unit/world-memory.test.ts tests/unit/contracts.test.ts tests/unit/bosses.test.ts tests/unit/economy.test.ts tests/unit/game-director.test.ts tests/unit/guilds.test.ts"
   }
 }

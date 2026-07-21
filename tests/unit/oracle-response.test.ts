@@ -2,28 +2,21 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { validateOracleResponse } from "../../src/core/domain/oracle-response.ts";
-import { INITIAL_DERIVED_STATS } from "../../src/core/domain/adventurer.ts";
-
 const response = {
   summary: "Entrada registrada.",
   narrative: "Una cronica breve.",
-  stats: { arte: 0, tecnologia: 0, vitalidad: 1, social: 0, sabiduria: 0 },
-  newCharacters: [], newKnowledge: [], contractEvidence: [], bossDamage: [], activities: [], entitySuggestions: []
+  contractEvidence: [], bossEvidence: [], activities: [], entitySuggestions: [], emotions: []
 };
 
-test("accepts all five visible core statistics", () => {
+test("accepts a factual Oracle proposal without state changes", () => {
   const result = validateOracleResponse(response);
   assert.equal(result.ok, true);
 });
 
-test("rejects manual discipline proposed by the Oracle", () => {
-  const result = validateOracleResponse({ ...response, stats: { ...response.stats, disciplina: 1 } });
+test("rejects state-changing fields proposed by the Oracle", () => {
+  const result = validateOracleResponse({ ...response, stats: { arte: 1 } });
   assert.equal(result.ok, false);
-  if (!result.ok) assert.ok(result.errors.includes("stats.disciplina cannot be assigned by the Oracle"));
-});
-
-test("starts Discipline at the visible derived-statistic baseline", () => {
-  assert.equal(INITIAL_DERIVED_STATS.disciplina, 50);
+  if (!result.ok) assert.ok(result.errors.includes("stats is not permitted in an Oracle response"));
 });
 
 test("accepts activities only when their core-stat weights total 100", () => {
@@ -47,4 +40,16 @@ test("normalizes entity suggestions without creating world memory", () => {
   });
   assert.equal(result.ok, true);
   if (result.ok) assert.deepEqual(result.value.entitySuggestions, [{ type: "herramienta", name: "ZBrush", alias: "ZB", category: "Escultura 3D" }]);
+});
+
+test("records emotions only when the Oracle can identify them", () => {
+  const result = validateOracleResponse({ ...response, emotions: [{ name: "satisfaccion" }] });
+  assert.equal(result.ok, true);
+  if (result.ok) assert.equal(result.value.emotions[0].name, "satisfaccion");
+});
+
+test("accepts boss evidence but never damage proposed by the Oracle", () => {
+  const result = validateOracleResponse({ ...response, bossEvidence: [{ bossId: "boss-1", rationale: "Se completo el contrato de pasaporte" }] });
+  assert.equal(result.ok, true);
+  if (result.ok) assert.equal(result.value.bossEvidence[0].bossId, "boss-1");
 });

@@ -13,6 +13,7 @@ export type ContractOrigin = "manual" | "motor";
 
 export type ContractReward = {
   experience?: number;
+  adventurerCoins?: number;
   statProgress?: Partial<Record<CoreStatKey, number>>;
   guildExperience?: Partial<Record<CoreStatKey, number>>;
   greatDestinationProgress?: number;

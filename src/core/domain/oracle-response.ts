@@ -1,190 +1,74 @@
-import { CORE_STAT_KEYS, type CoreStatKey } from "./adventurer.ts";
 import { ACTIVITY_BASE_XP, type ActivityScale } from "./progression.ts";
 import { normalizeEntityName, type EntitySuggestion } from "./world-memory.ts";
+import { CORE_STAT_KEYS, type CoreStatKey } from "./adventurer.ts";
 
-export const STAT_KEYS = CORE_STAT_KEYS;
-
-export type StatKey = CoreStatKey;
-
+export type OracleActivity = { scale: ActivityScale; durationMinutes: number; classifications: Array<{ stat: CoreStatKey; weight: number }> };
 export type OracleResponse = {
   summary: string;
   narrative: string;
-  stats: Record<StatKey, number>;
-  newCharacters: Array<{ name: string; alias: string; role: string }>;
-  newKnowledge: Array<{ name: string; category: string }>;
-  contractEvidence: Array<{ contractId: string; rationale: string }>;
-  bossDamage: Array<{ bossId: string; amount: number; sourceStat: string }>;
-  activities: Array<{ scale: ActivityScale; durationMinutes: number; classifications: Array<{ stat: StatKey; weight: number }> }>;
+  activities: OracleActivity[];
   entitySuggestions: EntitySuggestion[];
+  emotions: Array<{ name: string }>;
+  contractEvidence: Array<{ contractId: string; rationale: string }>;
+  bossEvidence: Array<{ bossId: string; rationale: string }>;
 };
-
-export type OracleValidation =
-  | { ok: true; value: OracleResponse }
-  | { ok: false; errors: string[] };
+export type OracleValidation = { ok: true; value: OracleResponse } | { ok: false; errors: string[] };
+const RESPONSE_FIELDS = new Set(["summary", "narrative", "activities", "entitySuggestions", "emotions", "contractEvidence", "bossEvidence"]);
 
 export function validateOracleResponse(value: unknown): OracleValidation {
-  if (!isRecord(value)) return invalid("The response must be an object");
-
+  if (!isRecord(value)) return { ok: false, errors: ["The response must be an object"] };
   const errors: string[] = [];
+  for (const field of Object.keys(value)) if (!RESPONSE_FIELDS.has(field)) errors.push(`${field} is not permitted in an Oracle response`);
   const summary = readText(value.summary, "summary", errors);
   const narrative = readText(value.narrative, "narrative", errors);
-  const stats = readStats(value.stats, errors);
-  const newCharacters = readCharacters(value.newCharacters, errors);
-  const newKnowledge = readKnowledge(value.newKnowledge, errors);
-  const contractEvidence = readContractEvidence(value.contractEvidence, errors);
-  const bossDamage = readBossDamage(value.bossDamage, errors);
   const activities = readActivities(value.activities, errors);
   const entitySuggestions = readEntitySuggestions(value.entitySuggestions, errors);
-
-  if (errors.length > 0) return { ok: false, errors };
-
-  return {
-    ok: true,
-    value: { summary, narrative, stats, newCharacters, newKnowledge, contractEvidence, bossDamage, activities, entitySuggestions }
-  };
+  const emotions = readEmotions(value.emotions, errors);
+  const contractEvidence = readEvidence(value.contractEvidence, "contractEvidence", "contractId", errors) as OracleResponse["contractEvidence"];
+  const bossEvidence = readEvidence(value.bossEvidence, "bossEvidence", "bossId", errors) as OracleResponse["bossEvidence"];
+  return errors.length > 0 ? { ok: false, errors } : { ok: true, value: { summary, narrative, activities, entitySuggestions, emotions, contractEvidence, bossEvidence } };
 }
 
-function readContractEvidence(value: unknown, errors: string[]): OracleResponse["contractEvidence"] {
-  if (!Array.isArray(value)) {
-    errors.push("contractEvidence must be an array");
-    return [];
-  }
+function readActivities(value: unknown, errors: string[]): OracleActivity[] {
+  if (!Array.isArray(value)) { errors.push("activities must be an array"); return []; }
   return value.flatMap((item, index) => {
-    if (!isRecord(item)) {
-      errors.push(`contractEvidence[${index}] must be an object`);
-      return [];
-    }
-    return [{ contractId: readText(item.contractId, `contractEvidence[${index}].contractId`, errors), rationale: readText(item.rationale, `contractEvidence[${index}].rationale`, errors) }];
-  });
-}
-
-function readEntitySuggestions(value: unknown, errors: string[]): EntitySuggestion[] {
-  if (!Array.isArray(value)) {
-    errors.push("entitySuggestions must be an array");
-    return [];
-  }
-  return value.flatMap((item, index) => {
-    if (!isRecord(item) || typeof item.type !== "string" || typeof item.name !== "string") {
-      errors.push(`entitySuggestions[${index}] is invalid`);
-      return [];
-    }
-    try {
-      return [{
-        type: item.type.trim(), name: normalizeEntityName(item.name),
-        alias: typeof item.alias === "string" ? normalizeEntityName(item.alias) : undefined,
-        category: typeof item.category === "string" ? normalizeEntityName(item.category) : undefined
-      }];
-    } catch {
-      errors.push(`entitySuggestions[${index}] is invalid`);
-      return [];
-    }
-  });
-}
-
-function readActivities(value: unknown, errors: string[]): OracleResponse["activities"] {
-  if (!Array.isArray(value)) {
-    errors.push("activities must be an array");
-    return [];
-  }
-  return value.flatMap((item, index) => {
-    if (!isRecord(item) || typeof item.scale !== "string" || !(item.scale in ACTIVITY_BASE_XP) || !Number.isSafeInteger(item.durationMinutes) || item.durationMinutes < 0 || !Array.isArray(item.classifications)) {
-      errors.push(`activities[${index}] is invalid`);
-      return [];
-    }
+    if (!isRecord(item) || typeof item.scale !== "string" || !(item.scale in ACTIVITY_BASE_XP) || !Number.isSafeInteger(item.durationMinutes) || item.durationMinutes < 0 || !Array.isArray(item.classifications)) { errors.push(`activities[${index}] is invalid`); return []; }
     const classifications = item.classifications.flatMap((classification, classificationIndex) => {
-      if (!isRecord(classification) || typeof classification.stat !== "string" || !STAT_KEYS.includes(classification.stat as StatKey) || !Number.isSafeInteger(classification.weight) || classification.weight <= 0) {
-        errors.push(`activities[${index}].classifications[${classificationIndex}] is invalid`);
-        return [];
-      }
-      return [{ stat: classification.stat as StatKey, weight: Number(classification.weight) }];
+      if (!isRecord(classification) || typeof classification.stat !== "string" || !CORE_STAT_KEYS.includes(classification.stat as CoreStatKey) || !Number.isSafeInteger(classification.weight) || classification.weight <= 0) { errors.push(`activities[${index}].classifications[${classificationIndex}] is invalid`); return []; }
+      return [{ stat: classification.stat as CoreStatKey, weight: Number(classification.weight) }];
     });
     const uniqueStats = new Set(classifications.map((classification) => classification.stat));
-    if (classifications.length === 0 || uniqueStats.size !== classifications.length || classifications.reduce((total, classification) => total + classification.weight, 0) !== 100) {
-      errors.push(`activities[${index}] classifications must contain unique core statistics totaling 100`);
-    }
+    if (classifications.length === 0 || uniqueStats.size !== classifications.length || classifications.reduce((total, classification) => total + classification.weight, 0) !== 100) errors.push(`activities[${index}] classifications must contain unique core statistics totaling 100`);
     return [{ scale: item.scale as ActivityScale, durationMinutes: Number(item.durationMinutes), classifications }];
   });
 }
 
-function readStats(value: unknown, errors: string[]): Record<StatKey, number> {
-  const result = {} as Record<StatKey, number>;
-  if (!isRecord(value)) {
-    errors.push("stats must be an object");
-    return result;
-  }
-  for (const key of Object.keys(value)) {
-    if (!STAT_KEYS.includes(key as StatKey)) errors.push(`stats.${key} cannot be assigned by the Oracle`);
-  }
-  for (const key of STAT_KEYS) {
-    const amount = value[key];
-    if (!Number.isSafeInteger(amount) || amount < 0) errors.push(`stats.${key} must be a non-negative integer`);
-    else result[key] = Number(amount);
-  }
-  return result;
-}
-
-function readCharacters(value: unknown, errors: string[]): OracleResponse["newCharacters"] {
-  if (!Array.isArray(value)) {
-    errors.push("newCharacters must be an array");
-    return [];
-  }
+function readEntitySuggestions(value: unknown, errors: string[]): EntitySuggestion[] {
+  if (!Array.isArray(value)) { errors.push("entitySuggestions must be an array"); return []; }
   return value.flatMap((item, index) => {
-    if (!isRecord(item)) {
-      errors.push(`newCharacters[${index}] must be an object`);
-      return [];
-    }
-    return [{ name: readText(item.name, `newCharacters[${index}].name`, errors), alias: readText(item.alias, `newCharacters[${index}].alias`, errors), role: readText(item.role, `newCharacters[${index}].role`, errors) }];
+    if (!isRecord(item) || typeof item.type !== "string" || typeof item.name !== "string") { errors.push(`entitySuggestions[${index}] is invalid`); return []; }
+    try { return [{ type: item.type.trim(), name: normalizeEntityName(item.name), alias: typeof item.alias === "string" ? normalizeEntityName(item.alias) : undefined, category: typeof item.category === "string" ? normalizeEntityName(item.category) : undefined }]; }
+    catch { errors.push(`entitySuggestions[${index}] is invalid`); return []; }
   });
 }
 
-function readKnowledge(value: unknown, errors: string[]): OracleResponse["newKnowledge"] {
-  if (!Array.isArray(value)) {
-    errors.push("newKnowledge must be an array");
-    return [];
-  }
-  return value.flatMap((item, index) => {
-    if (!isRecord(item)) {
-      errors.push(`newKnowledge[${index}] must be an object`);
-      return [];
-    }
-    return [{ name: readText(item.name, `newKnowledge[${index}].name`, errors), category: readText(item.category, `newKnowledge[${index}].category`, errors) }];
-  });
+function readEmotions(value: unknown, errors: string[]): OracleResponse["emotions"] {
+  if (!Array.isArray(value)) { errors.push("emotions must be an array"); return []; }
+  return value.map((item, index) => ({ name: readText(isRecord(item) ? item.name : undefined, `emotions[${index}].name`, errors) }));
 }
 
-function readBossDamage(value: unknown, errors: string[]): OracleResponse["bossDamage"] {
-  if (!Array.isArray(value)) {
-    errors.push("bossDamage must be an array");
-    return [];
-  }
+function readEvidence(value: unknown, field: "contractEvidence" | "bossEvidence", idField: "contractId" | "bossId", errors: string[]): Array<{ contractId: string; rationale: string }> | Array<{ bossId: string; rationale: string }> {
+  if (!Array.isArray(value)) { errors.push(`${field} must be an array`); return []; }
   return value.flatMap((item, index) => {
-    if (!isRecord(item) || !Number.isSafeInteger(item.amount) || item.amount < 0) {
-      errors.push(`bossDamage[${index}] must have a non-negative integer amount`);
-      return [];
-    }
-    return [{ bossId: readText(item.bossId, `bossDamage[${index}].bossId`, errors), amount: Number(item.amount), sourceStat: readText(item.sourceStat, `bossDamage[${index}].sourceStat`, errors) }];
+    if (!isRecord(item)) { errors.push(`${field}[${index}] must be an object`); return []; }
+    const rationale = readText(item.rationale, `${field}[${index}].rationale`, errors);
+    const id = readText(item[idField], `${field}[${index}].${idField}`, errors);
+    return idField === "contractId" ? [{ contractId: id, rationale }] : [{ bossId: id, rationale }];
   });
-}
-
-function readStringArray(value: unknown, field: string, errors: string[]): string[] {
-  if (!Array.isArray(value)) {
-    errors.push(`${field} must be an array`);
-    return [];
-  }
-  return value.map((item, index) => readText(item, `${field}[${index}]`, errors));
 }
 
 function readText(value: unknown, field: string, errors: string[]): string {
-  if (typeof value !== "string" || value.trim().length === 0) {
-    errors.push(`${field} must be a non-empty string`);
-    return "";
-  }
+  if (typeof value !== "string" || value.trim().length === 0) { errors.push(`${field} must be a non-empty string`); return ""; }
   return value.trim();
 }
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function invalid(error: string): OracleValidation {
-  return { ok: false, errors: [error] };
-}
+function isRecord(value: unknown): value is Record<string, unknown> { return typeof value === "object" && value !== null && !Array.isArray(value); }

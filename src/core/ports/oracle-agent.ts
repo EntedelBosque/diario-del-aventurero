@@ -1,6 +1,7 @@
 import type { DiaryEntry } from "../domain/diary-entry.ts";
 
 export type OracleContext = {
+  language: string;
   activeStats: Record<string, number>;
   relevantEntities: Array<{ id: string; type: string; name: string; aliases: string[] }>;
   activeContractIds: string[];

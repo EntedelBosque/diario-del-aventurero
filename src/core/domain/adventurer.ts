@@ -26,9 +26,10 @@ export type GuildDefinition = {
 
 // These identifiers mirror seed data in Supabase; gameplay configuration is data, not prompt text.
 export const INITIAL_GUILDS: readonly GuildDefinition[] = [
-  { code: "arte", officialName: "El Taller de los Escultores Eternos", primaryStat: "arte" },
-  { code: "tecnologia", officialName: "La Forja del Acero del Futuro", primaryStat: "tecnologia" },
-  { code: "vitalidad", officialName: "La Orden del Cuerpo Indomable", primaryStat: "vitalidad" },
-  { code: "social", officialName: "La Hermandad de los Caminantes", primaryStat: "social" },
-  { code: "sabiduria", officialName: "El Archivo de los Sabios Eternos", primaryStat: "sabiduria" }
+  { code: "forja_acero", officialName: "La Forja del Acero", primaryStat: "tecnologia" },
+  { code: "atelier_bosque", officialName: "El Atelier del Bosque", primaryStat: "arte" },
+  { code: "orden_roble", officialName: "La Orden del Roble", primaryStat: "vitalidad" },
+  { code: "caminantes_horizonte", officialName: "Los Caminantes del Horizonte", primaryStat: "sabiduria" },
+  { code: "archivo_eterno", officialName: "El Archivo Eterno", primaryStat: "sabiduria" },
+  { code: "vinculos_reino", officialName: "Los Vinculos del Reino", primaryStat: "social" }
 ];
