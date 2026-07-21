@@ -29,7 +29,6 @@ export type ExperienceBreakdown = {
   discoveryXp: number;
   bonusXp: number;
   totalXp: number;
-  guildXpAllocations: Record<CoreStatKey, number>;
 };
 
 const DISCOVERY_XP: Readonly<Record<DiscoveryType, number>> = {
@@ -54,8 +53,7 @@ export function calculateExperience(activity: ProgressActivity): ExperienceBreak
     peopleXp,
     discoveryXp,
     bonusXp: activity.bonusXp,
-    totalXp,
-    guildXpAllocations: allocateToGuilds(totalXp, activity.classifications)
+    totalXp
   };
 }
 
@@ -78,22 +76,6 @@ function calculateTimeBonus(minutes: number): number {
   if (minutes <= 120) return 20;
   if (minutes <= 240) return 35;
   return 50;
-}
-
-function allocateToGuilds(totalXp: number, classifications: ProgressActivity["classifications"]): Record<CoreStatKey, number> {
-  const allocations = Object.fromEntries(CORE_STAT_KEYS.map((stat) => [stat, 0])) as Record<CoreStatKey, number>;
-  const provisional = classifications.map((classification, index) => {
-    const exact = (totalXp * classification.weight) / 100;
-    return { ...classification, index, amount: Math.floor(exact), remainder: exact % 1 };
-  });
-  let unallocated = totalXp;
-  for (const item of provisional) {
-    allocations[item.stat] = item.amount;
-    unallocated -= item.amount;
-  }
-  provisional.sort((left, right) => right.remainder - left.remainder || left.index - right.index);
-  for (let index = 0; index < unallocated; index += 1) allocations[provisional[index].stat] += 1;
-  return allocations;
 }
 
 function validateActivity(activity: ProgressActivity): void {

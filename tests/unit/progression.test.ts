@@ -14,8 +14,7 @@ test("calculates XP with every official component", () => {
   });
 
   assert.deepEqual(result, {
-    baseXp: 20, timeXp: 10, peopleXp: 8, discoveryXp: 20, bonusXp: 5, totalXp: 63,
-    guildXpAllocations: { arte: 0, tecnologia: 38, vitalidad: 0, social: 0, sabiduria: 25 }
+    baseXp: 20, timeXp: 10, peopleXp: 8, discoveryXp: 20, bonusXp: 5, totalXp: 63
   });
 });
 

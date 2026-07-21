@@ -11,6 +11,7 @@ La respuesta es JSON puro, sin comentarios ni texto adicional:
   "summary": "resumen breve y factual",
   "narrative": "cronica RPG breve que no altera los hechos",
   "activities": [{
+    "category": "tecnologia",
     "scale": "pequena",
     "durationMinutes": 45,
     "classifications": [{ "stat": "tecnologia", "weight": 60 }, { "stat": "sabiduria", "weight": 40 }]
@@ -22,7 +23,7 @@ La respuesta es JSON puro, sin comentarios ni texto adicional:
 }
 ```
 
-Los arreglos pueden estar vacios si no hay evidencia suficiente. Las actividades son clasificaciones, no puntos de estadistica. Los campos de XP, monedas, dano, Disciplina, niveles, estados o mutaciones estan prohibidos.
+Los arreglos pueden estar vacios si no hay evidencia suficiente. Cada actividad incluye una categoria candidata: el Motor la valida contra el catalogo activo y resuelve desde ella el gremio destino; nunca lo infiere de la estadistica. Las actividades son clasificaciones, no puntos de estadistica. Los campos de XP, monedas, dano, Disciplina, niveles, estados o mutaciones estan prohibidos.
 
 ## Garantias
 

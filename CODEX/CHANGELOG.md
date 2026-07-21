@@ -1,5 +1,13 @@
 # Changelog - Diario de un Aventurero
 
+## [0.15.0] - 2026-07-21
+
+- Se agregan migraciones aditivas 013–016 para contenido universal, plantillas narrativas, evidencia de bosses y unicidad global de nombres oficiales.
+- La categoría de actividad pasa a ser obligatoria en el contrato del Oráculo; los gremios se resuelven por `guild_categories`, no por estadística.
+- Progresión deja de calcular asignaciones de XP de gremio; `guilds.ts` concentra ese reparto.
+- Se incorpora el cálculo puro de evidencia operativa de bosses y la normalización de nombres/slugs oficiales.
+- Anti-farming e Influence permanecen diferidos, sin reglas de balance inventadas.
+
 ## [0.14.0] - 2026-07-21
 - Se agrega el Developer Specification como referencia tecnica operativa.
 - Se incorpora la migracion 012, validada contra PostgreSQL 16, que completa optimistic locking en ocho tablas mutables mediante un trigger generico.

@@ -22,15 +22,23 @@ test("rejects state-changing fields proposed by the Oracle", () => {
 test("accepts activities only when their core-stat weights total 100", () => {
   const valid = validateOracleResponse({
     ...response,
-    activities: [{ scale: "media", durationMinutes: 60, classifications: [{ stat: "arte", weight: 60 }, { stat: "sabiduria", weight: 40 }] }]
+    activities: [{ category: "arte", scale: "media", durationMinutes: 60, classifications: [{ stat: "arte", weight: 60 }, { stat: "sabiduria", weight: 40 }] }]
   });
   assert.equal(valid.ok, true);
 
   const invalid = validateOracleResponse({
     ...response,
-    activities: [{ scale: "media", durationMinutes: 60, classifications: [{ stat: "arte", weight: 70 }] }]
+    activities: [{ category: "arte", scale: "media", durationMinutes: 60, classifications: [{ stat: "arte", weight: 70 }] }]
   });
   assert.equal(invalid.ok, false);
+});
+
+test("requires an activity category for the Motor to resolve its guild", () => {
+  const result = validateOracleResponse({
+    ...response,
+    activities: [{ scale: "media", durationMinutes: 60, classifications: [{ stat: "arte", weight: 100 }] }]
+  });
+  assert.equal(result.ok, false);
 });
 
 test("normalizes entity suggestions without creating world memory", () => {
