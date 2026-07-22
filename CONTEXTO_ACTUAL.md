@@ -21,13 +21,14 @@ progresión (XP, gremios, contratos, bosses, economía) sobre Supabase como fuen
 - Soporte de **múltiples actividades por evento** (migración 025 + contrato del Oráculo).
 
 ## En curso
-- Iterar el diseño por la línea de "códice iluminado" (a Fernando le encantó la tarjeta de
-  resultado con capitular, chips de gremio y fleurones).
-- Pestañas pendientes de contenido real: Personaje, Mundo, Misiones, Mercado (hoy son placeholders).
+- Iterar el diseño por la línea de "códice iluminado" + más RPG (grano, marco, tomos).
+- Pestañas pendientes de contenido real: Mundo, Misiones, Mercado (hoy son placeholders).
 
 ## Qué funciona hoy (añadidos recientes)
-- **Relatos** (`/relatos`): histórico de páginas del diario como libro hojeable (nav de 6 pestañas).
-- Tarjeta de resultado tipo códice; formulario con botón "Añadir página" y prompt "Relata tu aventura de hoy…".
+- **Diario** muestra las **estadísticas** del Aventurero (nivel, XP, stats, maestría de gremios) vía `GET /api/player`.
+- **Relatos** (`/relatos`): biblioteca por árbol Edad (año) → Época (mes) → páginas.
+- Nav = **5 pestañas** (Diario, Relatos, Mundo, Misiones, Mercado). Se eliminó Personaje (su hoja está en Diario).
+- Look RPG: grano de pergamino, marco interior en la page-card, tomos de biblioteca.
 - Previews de diseño vía Artifacts HTML autónomos (método preferido por Fernando).
 
 ## Aprendizajes / gotchas

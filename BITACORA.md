@@ -2,6 +2,28 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Relatos biblioteca, estadísticas en Diario, look RPG
+
+- **Fix crítico:** `oracle_interpretations.diary_entry_id` es PK → PostgREST lo embebe como objeto
+  (1-a-1), no array. `listAcceptedPages`/`toStoredEntry` lo leían como array → Relatos siempre
+  vacío. Se lee robusto (objeto o array) con `readInterpretation`.
+- **Relatos = biblioteca por árbol:** Edad (año) → Época (mes) → páginas. Drill-down con botón de
+  regreso. **Porqué:** Fernando lo pidió así, como hojear una biblioteca.
+- **Estadísticas dentro de Diario:** nuevo `GET /api/player` (nivel, XP, stats visibles de
+  `player_stats`, maestría de gremios). Panel `StatsPanel` arriba del formulario.
+- **Se eliminó la pestaña Personaje:** su hoja de personaje ahora vive en Diario. Nav = 5
+  pestañas (Diario, Relatos, Mundo, Misiones, Mercado). `ShieldIcon` queda sin uso.
+- **Helper `src/app/api/session.ts`** compartido (getAuthenticatedUser/withSessionCookies).
+- **Pase de diseño RPG (sin Claude Design):** grano de pergamino (SVG feTurbulence inline), marco
+  interior de latón en la page-card, tomos de biblioteca. **Porqué:** Fernando quiere "más RPG,
+  menos limpio". Claude Design no se necesita para esto.
+
+### Decisión: No se usa Claude Design para el look RPG
+- **Por qué:** DesignSync solo sirve para sincronizar un sistema de componentes con claude.ai/design;
+  la estética se logra con CSS propio + las design skills instaladas. Menos dependencia, gratis.
+- **Cómo aplica:** para iterar diseño, usar Artifacts de preview + las skills, no Claude Design.
+- **Fecha:** 2026-07-22
+
 ## 2026-07-22 — Tarjeta de resultado tipo códice + pestaña Relatos
 
 - **Tarjeta de resultado (page-card) elevada** a estética de códice iluminado: capitular (drop cap)
