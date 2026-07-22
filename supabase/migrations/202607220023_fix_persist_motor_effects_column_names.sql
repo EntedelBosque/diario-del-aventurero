@@ -1,7 +1,4 @@
--- CODEX-004 final: complete Motor effect persistence with all branches: activities, guilds, 
--- level recalculation, contracts, bosses, economy, and discipline.
--- All row updates use version-based optimistic locking like XP and guilds.
-
+-- Fix persist_motor_effects: use correct column names (level instead of current_level)
 create or replace function public.persist_motor_effects(
   p_world_event_id uuid,
   p_player_id uuid,
@@ -224,8 +221,6 @@ begin
   -- ============================================================================
   -- BRANCH 5: Economy (Currency Transactions)
   -- ============================================================================
-  -- For now, just record that an event occurred (actual rewards are in effects)
-  -- In future: parse p_effects->>'economyRewards' and create transactions
   if coalesce((p_effects->>'currencyDelta')::bigint, 0) <> 0 then
     v_balance := coalesce((select balance from public.currency_wallets where player_id = p_player_id), 0);
     v_balance := v_balance + coalesce((p_effects->>'currencyDelta')::bigint, 0);
