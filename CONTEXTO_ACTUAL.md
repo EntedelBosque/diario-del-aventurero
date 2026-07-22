@@ -21,8 +21,14 @@ progresión (XP, gremios, contratos, bosses, economía) sobre Supabase como fuen
 - Soporte de **múltiples actividades por evento** (migración 025 + contrato del Oráculo).
 
 ## En curso
+- Iterar el diseño de la pantalla de diario con feedback de Fernando (no le gustó la 1ª versión;
+  ya se cambió a botón rectangular "Añadir página" y prompt "Relata tu aventura de hoy…").
 - Afinar color/textura de la tarjeta de resultado según cómo se vea desde el iPhone.
-- Montaje del sistema de diseño: `CLAUDE.md` (guía de UI) + skills de diseño instaladas.
+
+## Aprendizajes / gotchas
+- **Categorías del Oráculo:** `activity.category` DEBE pertenecer al vocabulario cerrado de
+  `guild_categories` (9 slugs en minúsculas), o el Motor no encuentra gremio. El prompt ya lo
+  restringe. Si se agregan gremios/categorías, actualizar el enum del prompt Y la tabla.
 
 ## Próximos pasos
 1. Probar el flujo completo desde el iPhone y revisar cómo se ve la página de resultado.

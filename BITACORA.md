@@ -2,6 +2,19 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Fix del Motor (categorías) + ajuste del formulario
+
+- **Bug en producción:** el Motor lanzaba `No active guild is configured for category: Conversación`.
+  Causa: el Oráculo emitía categorías en lenguaje libre pero `guild_categories` usa un vocabulario
+  cerrado en minúsculas. **Fix:** el prompt ahora restringe `category` a los 9 slugs válidos
+  (tecnologia/arte/vitalidad/social/sabiduria/viajes/exploracion/cultura/idiomas) y
+  `resolveGuildCodes` normaliza (trim+minúsculas). **Porqué:** una entrada de vida válida no debe
+  quedar sin progreso (principio "nunca castiga por vivir").
+- **Formulario:** botón redondo de sello reemplazado por botón rectangular "Añadir página"; el
+  prompt ahora dice "Relata tu aventura de hoy…". **Porqué:** a Fernando no le gustó el sello redondo.
+- **Nota:** la entrada 7dabe232 (previa al fix) quedó registrada pero sin XP; a partir del fix las
+  actividades sociales mapean a `vinculos_reino`.
+
 ## 2026-07-22 — Sistema de diseño y skills de diseño
 
 - **Skill renombrada** de `bitacora` a `diario-del-aventurero` y hecha explícita del proyecto.
