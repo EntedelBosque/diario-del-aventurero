@@ -3,31 +3,22 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
+import { formatAdventurerTimestamp } from "../shared/format-date.ts";
 import { QuillIcon } from "../shared/icons/QuillIcon.tsx";
+import { ShieldIcon, CompassIcon, ScrollIcon, CoinIcon } from "../shared/icons/GameIcons.tsx";
 
-type DiaryResult = { narrative?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string };
+type DiaryResult = { title?: string; narrative?: string; occurredAt?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string; rewards?: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> } };
 
 export default function DiaryPage() {
   const [text, setText] = useState("");
   const [result, setResult] = useState<DiaryResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [sessionEmail, setSessionEmail] = useState<string | null>(null);
+  const [hasSession, setHasSession] = useState(false);
 
   useEffect(() => {
     const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-    supabase.auth.getUser().then(({ data }) => setSessionEmail(data.user?.email ?? null));
+    supabase.auth.getUser().then(({ data }) => setHasSession(Boolean(data.user)));
   }, []);
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setSubmitting(true); setResult(null);
-    try {
-      const response = await fetch("/api/diary-entries", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text, occurredAt: new Date().toISOString(), idempotencyKey: crypto.randomUUID() }) });
-      const body = await response.json() as DiaryResult;
-      if (!response.ok) throw new Error(body.error ?? "No se pudo registrar la entrada");
-      setResult(body); if (body.oracleStatus === "accepted") setText("");
-    } catch (error) { setResult({ error: error instanceof Error ? error.message : "Error desconocido" }); }
-    finally { setSubmitting(false); }
-  }
 
   async function logout() {
     const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -35,26 +26,64 @@ export default function DiaryPage() {
     window.location.href = "/login";
   }
 
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setSubmitting(true); setResult(null);
+    try {
+      const response = await fetch("/api/diary-entries", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text, occurredAt: new Date().toISOString(), idempotencyKey: crypto.randomUUID() }) });
+      const body = await response.json() as DiaryResult;
+      if (!response.ok) throw new Error(body.error ?? "No se pudo registrar la página");
+      setResult(body); if (body.oracleStatus === "accepted") setText("");
+    } catch (error) { setResult({ error: error instanceof Error ? error.message : "Error desconocido" }); }
+    finally { setSubmitting(false); }
+  }
+
+  const timestamp = result?.occurredAt ? formatAdventurerTimestamp(new Date(result.occurredAt)) : null;
+  const failed = result && (result.error || result.oracleStatus === "failed" || result.oracleStatus === "rejected");
+
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">Crónicas de lo Inexplorado</span>
+      <span className="eyebrow">Páginas de lo Inexplorado</span>
       <h1 className="headline">Diario de un Aventurero</h1>
     </div>
-    {sessionEmail ? <p className="session-status">Sesión activa: {sessionEmail} — <button type="button" className="link-button" onClick={logout}>Cerrar sesión</button></p> : <p><Link href="/login">Iniciar sesión</Link></p>}
+    {hasSession
+      ? <p className="session-status">Bienvenido, Aventurero — <button type="button" className="link-button" onClick={logout}>Cerrar sesión</button></p>
+      : <p className="session-status"><Link href="/login">Iniciar sesión</Link></p>}
     <div className="parchment" style={{ padding: "1.5rem" }}>
       <form onSubmit={submit}>
-        <label htmlFor="entry" className="headline" style={{ fontSize: "1rem" }}>¿Qué ocurrió?</label>
+        <label htmlFor="entry" className="headline" style={{ fontSize: "1rem" }}>¿Qué quedará escrito hoy en el códice?</label>
         <textarea id="entry" className="journal" value={text} onChange={(event) => setText(event.target.value)} maxLength={10000} required />
-        <button type="submit" className="seal-button" disabled={submitting}><QuillIcon width={28} height={28} />{submitting ? "Registrando…" : "Sellar Destino"}</button>
+        <button type="submit" className="seal-button" disabled={submitting}><QuillIcon width={28} height={28} />{submitting ? "Añadiendo…" : "Añadir al códice"}</button>
       </form>
     </div>
-    {result && <section className={`result ${result.error || result.oracleStatus === "failed" || result.oracleStatus === "rejected" ? "error" : ""}`}>{result.error ?? result.narrative ?? result.oracleErrors?.join(", ") ?? `Entrada ${result.oracleStatus}.`}{result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}</section>}
+    {result && (failed ? (
+      <section className="result error">{result.error ?? result.oracleErrors?.join(", ") ?? `La página no pudo completarse (${result.oracleStatus}).`}</section>
+    ) : (
+      <article className="parchment page-card">
+        {timestamp && <div className="page-timestamp">
+          <span>{timestamp.dateLine}</span>
+          <span>{timestamp.timeLine}</span>
+          {timestamp.celestialEvent && <span className="celestial">{timestamp.celestialEvent}</span>}
+        </div>}
+        {result.title && <h2 className="page-title">{result.title}</h2>}
+        <div className="page-divider" />
+        <p className="page-narrative">{result.narrative}</p>
+        {result.rewards && <>
+          <div className="page-divider" />
+          <div className="page-rewards">
+            <span>Experiencia</span>
+            <strong>+{result.rewards.totalXp} XP</strong>
+            {result.rewards.guildAwards.map((award) => <span key={award.guildCode}>{award.guildCode} +{award.experience}</span>)}
+          </div>
+        </>}
+        {result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}
+      </article>
+    ))}
     <nav className="bottom-nav">
-      <a href="/" data-active="true">Diario</a>
-      <a href="#">Personaje</a>
-      <a href="#">Mundo</a>
-      <a href="#">Misiones</a>
-      <a href="#">Mercado</a>
+      <a href="/" data-active="true"><QuillIcon width={20} height={20} />Diario</a>
+      <a href="#"><ShieldIcon width={20} height={20} />Personaje</a>
+      <a href="#"><CompassIcon width={20} height={20} />Mundo</a>
+      <a href="#"><ScrollIcon width={20} height={20} />Misiones</a>
+      <a href="#"><CoinIcon width={20} height={20} />Mercado</a>
     </nav>
   </main>;
 }

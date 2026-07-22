@@ -19,16 +19,20 @@ export async function POST(request: Request) {
     const entry = await new ProcessDiaryEntry({ diaryEntries: new SupabaseDiaryEntryRepository(), oracle: createOracleAgent(), loadOracleContext: loadOracleContextFromSupabase }).execute({ id: crypto.randomUUID(), playerId: session.user.id, idempotencyKey: body.idempotencyKey, text: body.text, occurredAt: new Date(body.occurredAt), submittedAt: new Date() });
 
     let motorError: string | undefined;
+    let rewards: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> } | undefined;
     if (entry.oracleStatus === "accepted" && entry.worldEventId) {
       try {
-        await new RunMotor(new SupabaseMotorRepository(), new SupabaseGameBalanceRepository()).execute(entry);
+        const effects = await new RunMotor(new SupabaseMotorRepository(), new SupabaseGameBalanceRepository()).execute(entry);
+        const guildTotals = new Map<string, number>();
+        for (const activity of effects.activities) for (const award of activity.guildAwards) guildTotals.set(award.guildCode, (guildTotals.get(award.guildCode) ?? 0) + award.experience);
+        rewards = { totalXp: effects.playerExperience, guildAwards: [...guildTotals.entries()].map(([guildCode, experience]) => ({ guildCode, experience })) };
       } catch (error) {
         motorError = error instanceof Error ? error.message : "El Motor no pudo procesar la entrada";
         console.error("Motor execution failed for entry", entry.id, error);
       }
     }
 
-    return withSessionCookies(NextResponse.json({ id: entry.id, oracleStatus: entry.oracleStatus, narrative: entry.oracleResponse?.narrative, oracleErrors: entry.oracleErrors, motorError }), session.cookiesToSet);
+    return withSessionCookies(NextResponse.json({ id: entry.id, oracleStatus: entry.oracleStatus, title: entry.oracleResponse?.title, narrative: entry.oracleResponse?.narrative, occurredAt: entry.occurredAt.toISOString(), oracleErrors: entry.oracleErrors, motorError, rewards }), session.cookiesToSet);
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 });
   }

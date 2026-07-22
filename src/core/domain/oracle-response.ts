@@ -4,6 +4,7 @@ import { CORE_STAT_KEYS, type CoreStatKey } from "./adventurer.ts";
 
 export type OracleActivity = { category: string; scale: ActivityScale; durationMinutes: number; classifications: Array<{ stat: CoreStatKey; weight: number }> };
 export type OracleResponse = {
+  title?: string;
   summary: string;
   narrative: string;
   activities: OracleActivity[];
@@ -13,12 +14,13 @@ export type OracleResponse = {
   bossEvidence: Array<{ bossId: string; rationale: string }>;
 };
 export type OracleValidation = { ok: true; value: OracleResponse } | { ok: false; errors: string[] };
-const RESPONSE_FIELDS = new Set(["summary", "narrative", "activities", "entitySuggestions", "emotions", "contractEvidence", "bossEvidence"]);
+const RESPONSE_FIELDS = new Set(["title", "summary", "narrative", "activities", "entitySuggestions", "emotions", "contractEvidence", "bossEvidence"]);
 
 export function validateOracleResponse(value: unknown): OracleValidation {
   if (!isRecord(value)) return { ok: false, errors: ["The response must be an object"] };
   const errors: string[] = [];
   for (const field of Object.keys(value)) if (!RESPONSE_FIELDS.has(field)) errors.push(`${field} is not permitted in an Oracle response`);
+  const title = typeof value.title === "string" && value.title.trim().length > 0 ? value.title.trim() : undefined;
   const summary = readText(value.summary, "summary", errors);
   const narrative = readText(value.narrative, "narrative", errors);
   const activities = readActivities(value.activities, errors);
@@ -26,7 +28,7 @@ export function validateOracleResponse(value: unknown): OracleValidation {
   const emotions = readEmotions(value.emotions, errors);
   const contractEvidence = readEvidence(value.contractEvidence, "contractEvidence", "contractId", errors) as OracleResponse["contractEvidence"];
   const bossEvidence = readEvidence(value.bossEvidence, "bossEvidence", "bossId", errors) as OracleResponse["bossEvidence"];
-  return errors.length > 0 ? { ok: false, errors } : { ok: true, value: { summary, narrative, activities, entitySuggestions, emotions, contractEvidence, bossEvidence } };
+  return errors.length > 0 ? { ok: false, errors } : { ok: true, value: { title, summary, narrative, activities, entitySuggestions, emotions, contractEvidence, bossEvidence } };
 }
 
 function readActivities(value: unknown, errors: string[]): OracleActivity[] {
