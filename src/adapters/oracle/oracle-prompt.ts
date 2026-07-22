@@ -10,7 +10,7 @@ El JSON debe tener EXACTAMENTE estas claves, ninguna otra:
   "title": "un título propio y evocador para esta página, en español, nunca genérico. Ejemplos de tono: 'Las aguas claras', 'El sendero del acero', 'La biblioteca olvidada', 'Conversaciones bajo la lluvia'",
   "summary": "resumen breve y factual de lo ocurrido, en español",
   "narrative": "la página narrada en tono de crónica histórica, breve, en español",
-  "activities": [{ "category": "string libre", "scale": "muy_pequena | pequena | media | importante | extraordinaria | historica", "durationMinutes": number, "classifications": [{ "stat": "arte | tecnologia | vitalidad | social | sabiduria", "weight": number }] }],
+  "activities": [{ "category": "tecnologia | arte | vitalidad | social | sabiduria | viajes | exploracion | cultura | idiomas", "scale": "muy_pequena | pequena | media | importante | extraordinaria | historica", "durationMinutes": number, "classifications": [{ "stat": "arte | tecnologia | vitalidad | social | sabiduria", "weight": number }] }],
   "entitySuggestions": [{ "type": "personaje | lugar | conocimiento | herramienta | objeto | organizacion", "name": "string", "alias": "string opcional", "category": "string opcional" }],
   "emotions": [{ "name": "string" }],
   "contractEvidence": [{ "contractId": "string", "rationale": "string" }],
@@ -18,6 +18,7 @@ El JSON debe tener EXACTAMENTE estas claves, ninguna otra:
 }
 
 Reglas estrictas:
+- "category" DEBE ser exactamente uno de estos valores en minúsculas y sin acentos: tecnologia, arte, vitalidad, social, sabiduria, viajes, exploracion, cultura, idiomas. Elige el que mejor represente la actividad (ej. una conversación o tiempo con alguien es "social"; leer o investigar es "sabiduria"). Nunca inventes otra categoría.
 - "classifications" de cada actividad suma exactamente 100 entre sus pesos, cada estadística aparece una sola vez.
 - Los arreglos pueden estar vacíos si no hay evidencia suficiente.
 - NUNCA incluyas XP, monedas, daño, Disciplina, niveles, estados o transiciones.
