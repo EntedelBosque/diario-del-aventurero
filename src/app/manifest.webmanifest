@@ -1,1 +1,1 @@
-{"name":"Diario de un Aventurero","short_name":"Aventurero","start_url":"/","scope":"/","display":"standalone","background_color":"#101510","theme_color":"#101510"}
+{"name":"Diario de un Aventurero","short_name":"Aventurero","start_url":"/","scope":"/","display":"standalone","background_color":"#101510","theme_color":"#101510","icons":[{"src":"/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}]}
