@@ -21,9 +21,14 @@ progresión (XP, gremios, contratos, bosses, economía) sobre Supabase como fuen
 - Soporte de **múltiples actividades por evento** (migración 025 + contrato del Oráculo).
 
 ## En curso
-- Iterar el diseño de la pantalla de diario con feedback de Fernando (no le gustó la 1ª versión;
-  ya se cambió a botón rectangular "Añadir página" y prompt "Relata tu aventura de hoy…").
-- Afinar color/textura de la tarjeta de resultado según cómo se vea desde el iPhone.
+- Iterar el diseño por la línea de "códice iluminado" (a Fernando le encantó la tarjeta de
+  resultado con capitular, chips de gremio y fleurones).
+- Pestañas pendientes de contenido real: Personaje, Mundo, Misiones, Mercado (hoy son placeholders).
+
+## Qué funciona hoy (añadidos recientes)
+- **Relatos** (`/relatos`): histórico de páginas del diario como libro hojeable (nav de 6 pestañas).
+- Tarjeta de resultado tipo códice; formulario con botón "Añadir página" y prompt "Relata tu aventura de hoy…".
+- Previews de diseño vía Artifacts HTML autónomos (método preferido por Fernando).
 
 ## Aprendizajes / gotchas
 - **Categorías del Oráculo:** `activity.category` DEBE pertenecer al vocabulario cerrado de

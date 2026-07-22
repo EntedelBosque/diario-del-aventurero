@@ -2,6 +2,23 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Tarjeta de resultado tipo códice + pestaña Relatos
+
+- **Tarjeta de resultado (page-card) elevada** a estética de códice iluminado: capitular (drop cap)
+  en la narrativa, nombres oficiales de gremio en vez de slugs, recompensas como chips con XP
+  destacada, divisores con fleurón ◆, glow dorado más sobrio. **Porqué:** a Fernando le encantó
+  esta dirección; se sigue por esta línea.
+- **Nueva pestaña "Relatos"** (`/relatos`): histórico de páginas aceptadas del diario, mostradas
+  como un libro hojeable reusando la page-card. **Porqué:** es literalmente el libro que se va
+  escribiendo con cada entrada.
+  - `GET /api/diary-entries` lista las páginas aceptadas del jugador; `listAcceptedPages` en el
+    repo hace inner join sobre `oracle_interpretations.status = accepted`.
+  - `BottomNav` extraído a componente compartido (6 pestañas, ícono de libro); `/relatos` añadido
+    al matcher del middleware para exigir sesión.
+- **Previews con Artifacts:** se usa un Artifact HTML autónomo para previsualizar el diseño sin
+  necesidad de sesión/deploy. A Fernando le gusta este método. **Cómo aplica:** al iterar diseño,
+  ofrecer un Artifact de preview además del deploy.
+
 ## 2026-07-22 — Fix del Motor (categorías) + ajuste del formulario
 
 - **Bug en producción:** el Motor lanzaba `No active guild is configured for category: Conversación`.
