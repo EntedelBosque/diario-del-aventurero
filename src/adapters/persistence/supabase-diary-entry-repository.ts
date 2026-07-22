@@ -23,7 +23,7 @@ export class SupabaseDiaryEntryRepository implements DiaryEntryRepository {
       .order("occurred_at", { ascending: false });
     if (error) throw new Error(`Could not list diary pages: ${error.message}`);
     return (data ?? []).flatMap((row) => {
-      const response = (row.oracle_interpretations as InterpretationRow[] | undefined)?.[0]?.response;
+      const response = readInterpretation(row.oracle_interpretations)?.response;
       if (!response) return [];
       return [{ id: row.id as string, occurredAt: new Date(row.occurred_at as string), title: response.title, narrative: response.narrative }];
     });
@@ -65,7 +65,15 @@ export class SupabaseDiaryEntryRepository implements DiaryEntryRepository {
 }
 
 type InterpretationRow = { status: StoredDiaryEntry["oracleStatus"]; response: OracleResponse | null; errors: string[] | null };
-function toStoredEntry(row: DiaryRow & { oracle_interpretations?: InterpretationRow[] }): StoredDiaryEntry {
-  const interpretation = row.oracle_interpretations?.[0];
+
+// oracle_interpretations.diary_entry_id is a PRIMARY KEY, so PostgREST embeds it as a
+// single object (to-one), not an array. Handle both shapes to be safe.
+function readInterpretation(embed: unknown): InterpretationRow | undefined {
+  if (Array.isArray(embed)) return embed[0] as InterpretationRow | undefined;
+  return (embed as InterpretationRow | null) ?? undefined;
+}
+
+function toStoredEntry(row: DiaryRow & { oracle_interpretations?: InterpretationRow[] | InterpretationRow }): StoredDiaryEntry {
+  const interpretation = readInterpretation(row.oracle_interpretations);
   return { id: row.id, playerId: row.player_id, idempotencyKey: row.idempotency_key, text: row.body, occurredAt: new Date(row.occurred_at), submittedAt: new Date(row.submitted_at), oracleStatus: row.oracle_status, ...(row.world_event_id ? { worldEventId: row.world_event_id } : {}), ...(interpretation?.response ? { oracleResponse: interpretation.response } : {}), ...(interpretation?.errors ? { oracleErrors: interpretation.errors } : {}) };
 }

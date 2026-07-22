@@ -23,6 +23,10 @@ export function formatAdventurerTimestamp(date: Date): { dateLine: string; timeL
   };
 }
 
+export function monthName(monthIndex: number): string {
+  return capitalize(MONTH_NAMES[monthIndex]);
+}
+
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }

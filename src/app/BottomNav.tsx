@@ -1,10 +1,9 @@
 import { QuillIcon } from "../shared/icons/QuillIcon.tsx";
-import { BookIcon, ShieldIcon, CompassIcon, ScrollIcon, CoinIcon } from "../shared/icons/GameIcons.tsx";
+import { BookIcon, CompassIcon, ScrollIcon, CoinIcon } from "../shared/icons/GameIcons.tsx";
 
 const TABS = [
   { href: "/", label: "Diario", key: "diario", Icon: QuillIcon },
   { href: "/relatos", label: "Relatos", key: "relatos", Icon: BookIcon },
-  { href: "#", label: "Personaje", key: "personaje", Icon: ShieldIcon },
   { href: "#", label: "Mundo", key: "mundo", Icon: CompassIcon },
   { href: "#", label: "Misiones", key: "misiones", Icon: ScrollIcon },
   { href: "#", label: "Mercado", key: "mercado", Icon: CoinIcon }

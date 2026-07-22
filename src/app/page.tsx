@@ -7,6 +7,7 @@ import { formatAdventurerTimestamp } from "../shared/format-date.ts";
 import { guildName } from "../shared/guilds.ts";
 import { QuillIcon } from "../shared/icons/QuillIcon.tsx";
 import { BottomNav } from "./BottomNav.tsx";
+import { StatsPanel } from "./StatsPanel.tsx";
 
 type DiaryResult = { title?: string; narrative?: string; occurredAt?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string; rewards?: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> } };
 
@@ -49,6 +50,7 @@ export default function DiaryPage() {
     {hasSession
       ? <p className="session-status">Bienvenido, Aventurero — <button type="button" className="link-button" onClick={logout}>Cerrar sesión</button></p>
       : <p className="session-status"><Link href="/login">Iniciar sesión</Link></p>}
+    {hasSession && <StatsPanel />}
     <div className="parchment" style={{ padding: "1.5rem" }}>
       <form onSubmit={submit}>
         <label htmlFor="entry" className="entry-prompt">Relata tu aventura de hoy…</label>
