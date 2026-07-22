@@ -6,7 +6,7 @@ export class GeminiOracleAgent implements OracleAgent {
   async interpret(entry: DiaryEntry, context: OracleContext): Promise<unknown> {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) throw new Error("GEMINI_API_KEY is required");
-    const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: "gemini-1.5-flash", generationConfig: { responseMimeType: "application/json" } });
+    const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: "gemini-1.5-flash-latest", generationConfig: { responseMimeType: "application/json" } });
     const result = await model.generateContent(JSON.stringify({ entry: { text: entry.text, occurredAt: entry.occurredAt.toISOString() }, context }));
     return JSON.parse(result.response.text());
   }
