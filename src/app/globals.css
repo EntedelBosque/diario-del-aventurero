@@ -1,13 +1,40 @@
-:root { color-scheme: dark; font-family: system-ui, sans-serif; }
+:root {
+  color-scheme: dark;
+  --bg: #1c1310;
+  --surface: #2b1e18;
+  --surface-high: #3a2a20;
+  --parchment: #e9dcc2;
+  --parchment-line: rgba(90,70,50,0.25);
+  --ink: #efe3cf;
+  --ink-muted: #b9a888;
+  --ink-on-parchment: #2b1b17;
+  --brass: #b08d57;
+  --brass-dim: rgba(176,141,87,0.35);
+  --gold: #c9a227;
+  --burgundy: #6e2a2a;
+  --moss: #5c6b47;
+  --radius: 10px;
+}
 * { box-sizing: border-box; }
-body { margin: 0; background: #101510; color: #f3f5ef; }
-main { min-height: 100dvh; padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom)); margin: auto; max-width: 44rem; }
-textarea, input, button { font: inherit; font-size: 16px; }
-textarea, input { width: 100%; padding: .75rem; border-radius: .5rem; border: 1px solid #667; background: #1a211a; color: inherit; }
-textarea { min-height: 12rem; resize: vertical; }
-button { margin-top: .75rem; padding: .75rem 1rem; border: 0; border-radius: .5rem; background: #8ab65c; color: #102000; font-weight: 700; }
-button:disabled { opacity: .6; }
-.result { margin-top: 1.5rem; padding: 1rem; border-radius: .5rem; background: #1a211a; white-space: pre-wrap; }
-.error { color: #ffb4ab; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+}
+h1, h2, h3, .headline { font-family: var(--font-cinzel), serif; letter-spacing: .02em; }
+main { min-height: 100dvh; padding: max(1rem, env(safe-area-inset-top)) 1rem calc(6rem + env(safe-area-inset-bottom)); margin: auto; max-width: 44rem; }
+.parchment { background: var(--parchment); color: var(--ink-on-parchment); border-radius: var(--radius); border: 1px solid var(--brass-dim); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.chapter-header { text-align: center; padding: 1.5rem 1rem 1rem; }
+.chapter-header .eyebrow { font-family: var(--font-cinzel), serif; font-size: .75rem; letter-spacing: .25em; text-transform: uppercase; color: var(--brass); }
+textarea, input { width: 100%; padding: .75rem; border-radius: 6px; border: 1px solid var(--parchment-line); background: transparent; color: inherit; font: inherit; font-size: 16px; }
+textarea.journal { font-family: var(--font-garamond), serif; font-size: 1.15rem; line-height: 2rem; background-image: repeating-linear-gradient(transparent, transparent 31px, var(--parchment-line) 31px, var(--parchment-line) 32px); min-height: 14rem; resize: vertical; border: none; }
+.seal-button { display: block; margin: 1.5rem auto 0; width: 8rem; height: 8rem; border-radius: 999px; border: 2px solid var(--burgundy); background: radial-gradient(circle at 30% 30%, #a03c20, #5c1806); color: var(--gold); font-family: var(--font-cinzel), serif; letter-spacing: .1em; font-size: .8rem; text-transform: uppercase; box-shadow: inset 0 2px 4px rgba(255,255,255,.2), inset 0 -3px 6px rgba(0,0,0,.6), 0 4px 10px rgba(0,0,0,.5); }
+.seal-button:active { transform: scale(.96); }
+.result { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--brass-dim); white-space: pre-wrap; font-family: var(--font-garamond), serif; font-size: 1.05rem; line-height: 1.6; }
+.error { color: #e8a89c; }
 .session-status { font-size: .85rem; opacity: .7; margin-bottom: .5rem; }
-.link-button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; font-weight: inherit; margin-top: 0; }
+.link-button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; }
+nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; background: var(--surface-high); border-top: 1px solid var(--brass-dim); padding: .5rem 0 max(.5rem, env(safe-area-inset-bottom)); }
+nav.bottom-nav a, nav.bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: .2rem; background: none; border: 0; color: var(--ink-muted); font-size: .7rem; font-family: inherit; }
+nav.bottom-nav a[data-active="true"] { color: var(--gold); }
