@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { DiaryEntry } from "../../core/domain/diary-entry.ts";
+import { GroqOracleAgent } from "./groq-oracle-agent.ts";
 import type { OracleAgent, OracleContext } from "../../core/ports/oracle-agent.ts";
 
 export class GeminiOracleAgent implements OracleAgent {
@@ -16,7 +17,8 @@ export class GeminiOracleAgent implements OracleAgent {
 }
 
 export function createOracleAgent(): OracleAgent {
-  const provider = process.env.AI_PROVIDER ?? "gemini";
+  const provider = process.env.AI_PROVIDER ?? "groq";
+  if (provider === "groq") return new GroqOracleAgent();
   if (provider === "gemini") return new GeminiOracleAgent();
   throw new Error(`Unsupported AI_PROVIDER: ${provider}`);
 }
