@@ -28,5 +28,11 @@ export default function DiaryPage() {
     finally { setSubmitting(false); }
   }
 
-  return <main><h1>Diario de un Aventurero</h1><p>Registra un hecho. La crónica nunca reemplaza lo que viviste.</p><p><Link href="/login">Iniciar sesión</Link></p>{sessionEmail && <p className="session-status">Sesión activa: {sessionEmail}</p>}<form onSubmit={submit}><label htmlFor="entry">¿Qué ocurrió?</label><textarea id="entry" value={text} onChange={(event) => setText(event.target.value)} maxLength={10000} required /><button disabled={submitting}>{submitting ? "Registrando…" : "Registrar"}</button></form>{result && <section className={`result ${result.error || result.oracleStatus === "failed" || result.oracleStatus === "rejected" ? "error" : ""}`}>{result.error ?? result.narrative ?? result.oracleErrors?.join(", ") ?? `Entrada ${result.oracleStatus}.`}{result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}</section>}</main>;
+  async function logout() {
+    const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  }
+
+  return <main><h1>Diario de un Aventurero</h1><p>Registra un hecho. La crónica nunca reemplaza lo que viviste.</p>{sessionEmail ? <p className="session-status">Sesión activa: {sessionEmail} — <button type="button" className="link-button" onClick={logout}>Cerrar sesión</button></p> : <p><Link href="/login">Iniciar sesión</Link></p>}<form onSubmit={submit}><label htmlFor="entry">¿Qué ocurrió?</label><textarea id="entry" value={text} onChange={(event) => setText(event.target.value)} maxLength={10000} required /><button disabled={submitting}>{submitting ? "Registrando…" : "Registrar"}</button></form>{result && <section className={`result ${result.error || result.oracleStatus === "failed" || result.oracleStatus === "rejected" ? "error" : ""}`}>{result.error ?? result.narrative ?? result.oracleErrors?.join(", ") ?? `Entrada ${result.oracleStatus}.`}{result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}</section>}</main>;
 }

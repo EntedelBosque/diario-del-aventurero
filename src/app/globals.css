@@ -10,3 +10,4 @@ button:disabled { opacity: .6; }
 .result { margin-top: 1.5rem; padding: 1rem; border-radius: .5rem; background: #1a211a; white-space: pre-wrap; }
 .error { color: #ffb4ab; }
 .session-status { font-size: .85rem; opacity: .7; margin-bottom: .5rem; }
+.link-button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; font-weight: inherit; margin-top: 0; }
