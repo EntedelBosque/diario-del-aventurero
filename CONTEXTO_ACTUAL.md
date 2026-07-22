@@ -22,7 +22,19 @@ progresión (XP, gremios, contratos, bosses, economía) sobre Supabase como fuen
 
 ## En curso
 - Iterar el diseño por la línea de "códice iluminado" + más RPG (grano, marco, tomos).
-- Pestañas pendientes de contenido real: Mundo, Misiones, Mercado (hoy son placeholders).
+- 5 pestañas ya funcionales (Diario, Relatos, Mundo, Misiones, Mercado).
+
+## Brechas conocidas (de la auditoría 2026-07-22)
+1. **Economía desconectada** — `RunMotor` no emite `currencyDelta`; las monedas nunca se acreditan
+   (Mercado siempre 0). Cablear economía es lo #1 para que Mercado tenga sentido.
+2. **Sin generadores** — nada crea contratos (Misiones) ni bosses ni artículos de mercado. Requiere
+   cablear el Director del Juego + definición de contenido por Codex.
+3. **Backups** — hacer `pg_dump`/export periódico (free tier no da PITR).
+4. **Deuda menor** — falta `.gitattributes` (CRLF), tests de endpoints nuevos, paginación futura.
+
+## Sostenibilidad
+Con 3 entradas/día: ~10–20 MB/año → **décadas** dentro de los 500 MB del free tier; IA **$0**
+(90 req/mes). Riesgo real = operativo (pausa por inactividad de 7 días, backups), no capacidad.
 
 ## Qué funciona hoy (añadidos recientes)
 - **Diario** muestra las **estadísticas** del Aventurero (nivel, XP, stats, maestría de gremios) vía `GET /api/player`.

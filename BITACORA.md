@@ -2,6 +2,32 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Pestañas Mundo/Misiones/Mercado + auditoría del proyecto
+
+- **Mundo funcional:** se cableó la escritura de `entitySuggestions` → `world_entities` (upsert
+  idempotente) en entradas aceptadas. Antes la Oráculo las sugería pero nadie las guardaba. Ahora
+  Mundo se llena con el uso. Página `/mundo` agrupa por tipo.
+- **Misiones/Mercado:** vistas reales cableadas (`/api/contracts`, `/api/market`) con estado vacío
+  honesto. NO se inventó contenido (contratos/artículos son dominio del Game Designer/Codex).
+
+### Auditoría (hallazgos, 2026-07-22)
+- **Economía desconectada:** `RunMotor` no emite `currencyDelta`; el RPC `persist_motor_effects`
+  suma 0 a `currency_wallets` → las monedas nunca se acreditan (Mercado siempre 0). Existe
+  `economy.ts` y la rama del RPC, pero no están unidas. *Pendiente: cablear.*
+- **Sin generadores:** nada crea contratos (Director del Juego no está cableado) ni bosses ni
+  artículos de mercado → esas pestañas quedan vacías hasta que Codex defina el contenido.
+- **Lecturas con service-role + filtro manual por player_id** (saltan RLS). Bien para 1 usuario;
+  para multi-usuario conviene leer con cliente de sesión y RLS.
+- **Sin paginación** en Relatos/Mundo (cargan todo). Ok por años; añadir cuando crezca.
+- **CRLF churn** (Windows): falta `.gitattributes` con `* text=auto`.
+- **Faltan tests** de los endpoints nuevos y de la persistencia de entidades.
+
+### Sostenibilidad (3 entradas/día)
+- ~10–14 filas y ~5–10 KB por entrada → ~1,100 entradas/año ≈ ~10–20 MB/año.
+- Supabase free = 500 MB DB → **~25–50 años** de datos. Costo IA con 90 req/mes = **$0** (Groq/Gemini free).
+- Límite real NO es capacidad sino operativo: el proyecto free **se pausa tras 7 días inactivo**;
+  backups automáticos limitados en free → hacer `pg_dump`/export periódico del diario.
+
 ## 2026-07-22 — Relatos biblioteca, estadísticas en Diario, look RPG
 
 - **Fix crítico:** `oracle_interpretations.diary_entry_id` es PK → PostgREST lo embebe como objeto
