@@ -71,16 +71,32 @@ textarea.journal {
 .add-button:active { transform: translateY(1px); box-shadow: 0 1px 5px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05); }
 .add-button:disabled { opacity: .6; cursor: progress; }
 
-/* Página del Oráculo: acento híbrido de brillo dorado */
-.page-card { margin-top: 1.5rem; padding: 1.75rem 1.5rem; box-shadow: inset 0 0 25px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.4), 0 0 22px var(--gold-glow); animation: page-rise .45s var(--ease-out) both; }
+/* Página del Oráculo: página de códice iluminado */
+.page-card { margin-top: 1.5rem; padding: 2rem 1.6rem; box-shadow: inset 0 0 30px rgba(0,0,0,.1), 0 8px 24px rgba(0,0,0,.4), 0 0 14px var(--gold-glow); animation: page-rise .45s var(--ease-out) both; }
 @keyframes page-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.page-timestamp { display: flex; flex-direction: column; align-items: center; gap: .15rem; font-family: var(--font-cinzel), serif; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; opacity: .75; margin-bottom: .75rem; }
-.page-timestamp .celestial { color: var(--burgundy); font-weight: 600; }
-.page-title { text-align: center; font-size: 1.3rem; margin: 0 0 1rem; }
-.page-divider { height: 1px; background: linear-gradient(to right, transparent, var(--brass), transparent); margin: 1rem 0; opacity: .5; }
-.page-narrative { font-family: var(--font-garamond), serif; font-style: italic; font-size: 1.12rem; line-height: 1.75; }
-.page-rewards { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: baseline; font-family: var(--font-cinzel), serif; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
-.page-rewards strong { color: var(--burgundy); font-size: 1rem; }
+
+.page-timestamp { display: flex; flex-direction: column; align-items: center; gap: .2rem; margin-bottom: 1rem; text-align: center; }
+.page-timestamp .celestial { font-family: var(--font-cinzel), serif; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--burgundy); border: 1px solid var(--brass-dim); border-radius: 999px; padding: .2rem .6rem; margin-bottom: .3rem; }
+.page-timestamp .ts-date { font-family: var(--font-cinzel), serif; font-size: .78rem; letter-spacing: .06em; color: var(--ink-on-parchment); opacity: .85; }
+.page-timestamp .ts-time { font-family: var(--font-garamond), serif; font-style: italic; font-size: .82rem; opacity: .6; }
+
+.page-title { text-align: center; font-size: 1.45rem; line-height: 1.25; margin: 0 0 .25rem; color: var(--ink-on-parchment); }
+
+.page-divider { display: flex; align-items: center; gap: .7rem; margin: 1.1rem 0; }
+.page-divider::before, .page-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--brass-dim), transparent); }
+.page-divider span { color: var(--brass); font-size: .6rem; opacity: .7; }
+
+.page-narrative { font-family: var(--font-garamond), serif; font-size: 1.18rem; line-height: 1.8; text-align: justify; }
+.page-narrative::first-letter { font-family: var(--font-cinzel), serif; font-size: 3.1rem; line-height: .8; float: left; margin: .12rem .55rem -.1rem 0; color: var(--burgundy); }
+
+.page-rewards { display: flex; flex-direction: column; gap: .7rem; }
+.reward-xp { display: flex; align-items: baseline; gap: .5rem; font-family: var(--font-cinzel), serif; }
+.reward-xp .reward-label { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; opacity: .7; }
+.reward-xp strong { font-size: 1.5rem; color: var(--burgundy); }
+.reward-xp .reward-unit { font-size: .8rem; color: var(--burgundy); opacity: .8; }
+.guild-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.guild-chip { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-cinzel), serif; font-size: .68rem; letter-spacing: .03em; color: var(--ink-on-parchment); background: rgba(176,141,87,.12); border: 1px solid var(--brass-dim); border-radius: 999px; padding: .28rem .7rem; }
+.guild-chip em { font-style: normal; font-weight: 600; color: var(--burgundy); }
 
 /* Aviso/errores: cristal ahumado sobre superficie oscura */
 .result { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: var(--radius); background: rgba(43,30,24,.7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid var(--brass-dim); animation: page-rise .35s var(--ease-out) both; }
