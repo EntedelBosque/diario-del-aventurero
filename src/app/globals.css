@@ -140,6 +140,24 @@ textarea.journal {
 .library-title { flex: 1; font-size: 1rem; letter-spacing: .04em; }
 .library-count { font-family: var(--font-garamond), serif; font-style: italic; font-size: .8rem; color: var(--ink-muted); }
 
+/* Colecciones (Mundo, Misiones, Mercado) */
+.collection-group { margin-top: 1.6rem; }
+.collection-group > h2 { font-family: var(--font-cinzel), serif; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--brass); margin: 0 0 .7rem; }
+.collection-list { display: flex; flex-direction: column; gap: .6rem; }
+.card-row {
+  display: flex; flex-direction: column; gap: .28rem; padding: .9rem 1.1rem;
+  border-radius: var(--radius); border: 1px solid var(--brass-dim);
+  background: linear-gradient(var(--surface-high), var(--surface));
+  box-shadow: inset 3px 0 0 var(--brass-dim), 0 3px 10px rgba(0,0,0,.35);
+}
+.card-row .row-title { font-family: var(--font-cinzel), serif; font-size: .95rem; letter-spacing: .02em; color: var(--ink); }
+.card-row .row-meta { font-family: var(--font-garamond), serif; font-style: italic; font-size: .82rem; color: var(--ink-muted); }
+.card-row .reward-cost { font-family: var(--font-cinzel), serif; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+
+.wallet { text-align: center; padding: 1.5rem 1rem; margin-bottom: .5rem; }
+.wallet .coins { display: block; font-family: var(--font-cinzel), serif; font-size: 2.4rem; color: var(--burgundy); line-height: 1; }
+.wallet .coins-label { font-family: var(--font-cinzel), serif; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; opacity: .65; }
+
 /* Barra inferior: cristal translúcido */
 nav.bottom-nav {
   position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around;

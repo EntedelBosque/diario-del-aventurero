@@ -4,9 +4,9 @@ import { BookIcon, CompassIcon, ScrollIcon, CoinIcon } from "../shared/icons/Gam
 const TABS = [
   { href: "/", label: "Diario", key: "diario", Icon: QuillIcon },
   { href: "/relatos", label: "Relatos", key: "relatos", Icon: BookIcon },
-  { href: "#", label: "Mundo", key: "mundo", Icon: CompassIcon },
-  { href: "#", label: "Misiones", key: "misiones", Icon: ScrollIcon },
-  { href: "#", label: "Mercado", key: "mercado", Icon: CoinIcon }
+  { href: "/mundo", label: "Mundo", key: "mundo", Icon: CompassIcon },
+  { href: "/misiones", label: "Misiones", key: "misiones", Icon: ScrollIcon },
+  { href: "/mercado", label: "Mercado", key: "mercado", Icon: CoinIcon }
 ];
 
 export function BottomNav({ active }: { active: string }) {
