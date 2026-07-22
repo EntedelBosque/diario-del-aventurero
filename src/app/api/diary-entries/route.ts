@@ -5,6 +5,9 @@ import { SupabaseDiaryEntryRepository } from "../../../adapters/persistence/supa
 import { loadOracleContextFromSupabase } from "../../../adapters/persistence/supabase-oracle-context.ts";
 import { createOracleAgent } from "../../../adapters/oracle/gemini-oracle-agent.ts";
 import { ProcessDiaryEntry } from "../../../core/application/process-diary-entry.ts";
+import { RunMotor } from "../../../core/application/run-motor.ts";
+import { SupabaseMotorRepository } from "../../../adapters/persistence/supabase-motor-repository.ts";
+import { SupabaseGameBalanceRepository } from "../../../adapters/persistence/supabase-game-balance-repository.ts";
 
 export async function POST(request: Request) {
   try {
@@ -12,9 +15,23 @@ export async function POST(request: Request) {
     if (!session.user) return withSessionCookies(NextResponse.json({ error: "Autenticación requerida" }, { status: 401 }), session.cookiesToSet);
     const body = await request.json() as { text?: unknown; occurredAt?: unknown; idempotencyKey?: unknown };
     if (typeof body.text !== "string" || typeof body.occurredAt !== "string" || typeof body.idempotencyKey !== "string") return NextResponse.json({ error: "Solicitud inválida" }, { status: 400 });
+
     const entry = await new ProcessDiaryEntry({ diaryEntries: new SupabaseDiaryEntryRepository(), oracle: createOracleAgent(), loadOracleContext: loadOracleContextFromSupabase }).execute({ id: crypto.randomUUID(), playerId: session.user.id, idempotencyKey: body.idempotencyKey, text: body.text, occurredAt: new Date(body.occurredAt), submittedAt: new Date() });
-    return withSessionCookies(NextResponse.json({ id: entry.id, oracleStatus: entry.oracleStatus, narrative: entry.oracleResponse?.narrative, oracleErrors: entry.oracleErrors }), session.cookiesToSet);
-  } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 }); }
+
+    let motorError: string | undefined;
+    if (entry.oracleStatus === "accepted" && entry.worldEventId) {
+      try {
+        await new RunMotor(new SupabaseMotorRepository(), new SupabaseGameBalanceRepository()).execute(entry);
+      } catch (error) {
+        motorError = error instanceof Error ? error.message : "El Motor no pudo procesar la entrada";
+        console.error("Motor execution failed for entry", entry.id, error);
+      }
+    }
+
+    return withSessionCookies(NextResponse.json({ id: entry.id, oracleStatus: entry.oracleStatus, narrative: entry.oracleResponse?.narrative, oracleErrors: entry.oracleErrors, motorError }), session.cookiesToSet);
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 });
+  }
 }
 
 async function getAuthenticatedUser() {
