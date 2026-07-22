@@ -6,7 +6,7 @@ import { createBrowserClient } from "@supabase/ssr";
 import { formatAdventurerTimestamp } from "../shared/format-date.ts";
 import { guildName } from "../shared/guilds.ts";
 import { QuillIcon } from "../shared/icons/QuillIcon.tsx";
-import { ShieldIcon, CompassIcon, ScrollIcon, CoinIcon } from "../shared/icons/GameIcons.tsx";
+import { BottomNav } from "./BottomNav.tsx";
 
 type DiaryResult = { title?: string; narrative?: string; occurredAt?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string; rewards?: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> } };
 
@@ -80,12 +80,6 @@ export default function DiaryPage() {
         {result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}
       </article>
     ))}
-    <nav className="bottom-nav">
-      <a href="/" data-active="true"><QuillIcon width={20} height={20} />Diario</a>
-      <a href="#"><ShieldIcon width={20} height={20} />Personaje</a>
-      <a href="#"><CompassIcon width={20} height={20} />Mundo</a>
-      <a href="#"><ScrollIcon width={20} height={20} />Misiones</a>
-      <a href="#"><CoinIcon width={20} height={20} />Mercado</a>
-    </nav>
+    <BottomNav active="diario" />
   </main>;
 }

@@ -14,6 +14,21 @@ export class SupabaseDiaryEntryRepository implements DiaryEntryRepository {
     return data ? toStoredEntry(data as DiaryRow & { oracle_interpretations?: InterpretationRow[] }) : null;
   }
 
+  async listAcceptedPages(playerId: string): Promise<Array<{ id: string; occurredAt: Date; title?: string; narrative: string }>> {
+    const { data, error } = await this.supabase
+      .from("diary_entries")
+      .select("id, occurred_at, oracle_interpretations!inner(status, response)")
+      .eq("player_id", playerId)
+      .eq("oracle_interpretations.status", "accepted")
+      .order("occurred_at", { ascending: false });
+    if (error) throw new Error(`Could not list diary pages: ${error.message}`);
+    return (data ?? []).flatMap((row) => {
+      const response = (row.oracle_interpretations as InterpretationRow[] | undefined)?.[0]?.response;
+      if (!response) return [];
+      return [{ id: row.id as string, occurredAt: new Date(row.occurred_at as string), title: response.title, narrative: response.narrative }];
+    });
+  }
+
   async record(entry: DiaryEntry): Promise<StoredDiaryEntry> {
     const { data, error } = await this.supabase.from("diary_entries").insert({ id: entry.id, player_id: entry.playerId, idempotency_key: entry.idempotencyKey, body: entry.text, occurred_at: entry.occurredAt.toISOString(), submitted_at: entry.submittedAt.toISOString() }).select().single();
     if (error) throw new Error(`Could not record diary entry: ${error.message}`);

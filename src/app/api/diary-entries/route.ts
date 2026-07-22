@@ -9,6 +9,17 @@ import { RunMotor } from "../../../core/application/run-motor.ts";
 import { SupabaseMotorRepository } from "../../../adapters/persistence/supabase-motor-repository.ts";
 import { SupabaseGameBalanceRepository } from "../../../adapters/persistence/supabase-game-balance-repository.ts";
 
+export async function GET() {
+  const session = await getAuthenticatedUser();
+  if (!session.user) return withSessionCookies(NextResponse.json({ error: "Autenticación requerida" }, { status: 401 }), session.cookiesToSet);
+  try {
+    const pages = await new SupabaseDiaryEntryRepository().listAcceptedPages(session.user.id);
+    return withSessionCookies(NextResponse.json({ pages: pages.map((page) => ({ id: page.id, occurredAt: page.occurredAt.toISOString(), title: page.title, narrative: page.narrative })) }), session.cookiesToSet);
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getAuthenticatedUser();

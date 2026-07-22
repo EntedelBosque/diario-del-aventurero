@@ -20,3 +20,8 @@ export function ScrollIcon(props: React.SVGProps<SVGSVGElement>) {
 export function CoinIcon(props: React.SVGProps<SVGSVGElement>) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}><ellipse cx="12" cy="7" rx="7" ry="3" /><path d="M5 7v5c0 1.66 3.13 3 7 3s7-1.34 7-3V7" /><path d="M5 12v5c0 1.66 3.13 3 7 3s7-1.34 7-3v-5" /></svg>;
 }
+
+// Relatos — libro abierto (el códice)
+export function BookIcon(props: React.SVGProps<SVGSVGElement>) {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 6.5C10.3 5.3 7.8 4.7 5 4.7V17c2.8 0 5.3.6 7 1.8 1.7-1.2 4.2-1.8 7-1.8V4.7c-2.8 0-5.3.6-7 1.8z" /><path d="M12 6.5V18.8" /></svg>;
+}

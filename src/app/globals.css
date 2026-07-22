@@ -102,6 +102,7 @@ textarea.journal {
 .result { margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: var(--radius); background: rgba(43,30,24,.7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid var(--brass-dim); animation: page-rise .35s var(--ease-out) both; }
 .error { color: #e8a89c; }
 .page-card .error { margin-top: 1rem; font-family: var(--font-source-sans), sans-serif; font-style: normal; font-size: .85rem; }
+.relatos-hint { text-align: center; font-family: var(--font-garamond), serif; font-style: italic; font-size: 1.05rem; color: var(--ink-muted); margin: 2.5rem 1rem; }
 
 /* Barra inferior: cristal translúcido */
 nav.bottom-nav {
@@ -112,8 +113,8 @@ nav.bottom-nav {
   box-shadow: 0 -4px 12px rgba(0,0,0,.4);
 }
 nav.bottom-nav a {
-  display: flex; flex-direction: column; align-items: center; gap: .3rem; min-height: 44px; justify-content: center;
-  flex: 1; color: var(--ink-muted); font-size: .65rem; font-family: var(--font-cinzel), serif; letter-spacing: .04em; text-decoration: none;
+  display: flex; flex-direction: column; align-items: center; gap: .28rem; min-height: 44px; justify-content: center;
+  flex: 1; color: var(--ink-muted); font-size: .6rem; font-family: var(--font-cinzel), serif; letter-spacing: .02em; text-decoration: none; white-space: nowrap;
   transition: color .15s var(--ease-out);
 }
 nav.bottom-nav a:active { color: var(--gold); }
