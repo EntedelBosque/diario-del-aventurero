@@ -50,9 +50,9 @@ export default function DiaryPage() {
       : <p className="session-status"><Link href="/login">Iniciar sesión</Link></p>}
     <div className="parchment" style={{ padding: "1.5rem" }}>
       <form onSubmit={submit}>
-        <label htmlFor="entry" className="headline" style={{ fontSize: "1rem" }}>¿Qué quedará escrito hoy en el códice?</label>
+        <label htmlFor="entry" className="entry-prompt">Relata tu aventura de hoy…</label>
         <textarea id="entry" className="journal" value={text} onChange={(event) => setText(event.target.value)} maxLength={10000} required />
-        <button type="submit" className="seal-button" disabled={submitting}><QuillIcon width={28} height={28} />{submitting ? "Añadiendo…" : "Añadir al códice"}</button>
+        <button type="submit" className="add-button" disabled={submitting}><QuillIcon width={20} height={20} />{submitting ? "Añadiendo…" : "Añadir página"}</button>
       </form>
     </div>
     {result && (failed ? (
