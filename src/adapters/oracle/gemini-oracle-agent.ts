@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { DiaryEntry } from "../../core/domain/diary-entry.ts";
 import { GroqOracleAgent } from "./groq-oracle-agent.ts";
 import type { OracleAgent, OracleContext } from "../../core/ports/oracle-agent.ts";
+import { ORACLE_SYSTEM_PROMPT, buildOracleUserPrompt } from "./oracle-prompt.ts";
 
 export class GeminiOracleAgent implements OracleAgent {
   async interpret(entry: DiaryEntry, context: OracleContext): Promise<unknown> {
@@ -11,7 +12,7 @@ export class GeminiOracleAgent implements OracleAgent {
       { model: "gemini-1.5-flash", generationConfig: { responseMimeType: "application/json" } },
       { apiVersion: "v1" }
     );
-    const result = await model.generateContent(JSON.stringify({ entry: { text: entry.text, occurredAt: entry.occurredAt.toISOString() }, context }));
+    const result = await model.generateContent(`${ORACLE_SYSTEM_PROMPT}\n\n${buildOracleUserPrompt(entry, context)}`);
     return JSON.parse(result.response.text());
   }
 }

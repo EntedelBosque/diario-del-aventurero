@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import type { DiaryEntry } from "../../core/domain/diary-entry.ts";
 import type { OracleAgent, OracleContext } from "../../core/ports/oracle-agent.ts";
+import { ORACLE_SYSTEM_PROMPT, buildOracleUserPrompt } from "./oracle-prompt.ts";
 
 export class GroqOracleAgent implements OracleAgent {
   async interpret(entry: DiaryEntry, context: OracleContext): Promise<unknown> {
@@ -11,8 +12,8 @@ export class GroqOracleAgent implements OracleAgent {
       model: "llama-3.3-70b-versatile",
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: "Responde únicamente con un objeto JSON válido, sin texto adicional ni bloques de código." },
-        { role: "user", content: JSON.stringify({ entry: { text: entry.text, occurredAt: entry.occurredAt.toISOString() }, context }) }
+        { role: "system", content: ORACLE_SYSTEM_PROMPT },
+        { role: "user", content: buildOracleUserPrompt(entry, context) }
       ]
     });
     const content = completion.choices[0]?.message?.content;
