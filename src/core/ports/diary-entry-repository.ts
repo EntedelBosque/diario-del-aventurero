@@ -2,6 +2,7 @@ import type { DiaryEntry } from "../domain/diary-entry.ts";
 import type { OracleResponse } from "../domain/oracle-response.ts";
 
 export type StoredDiaryEntry = DiaryEntry & {
+  worldEventId?: string;
   oracleStatus: "pending" | "accepted" | "rejected" | "failed";
   oracleResponse?: OracleResponse;
   oracleErrors?: string[];
