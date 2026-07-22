@@ -32,14 +32,22 @@ export function validateOracleResponse(value: unknown): OracleValidation {
 function readActivities(value: unknown, errors: string[]): OracleActivity[] {
   if (!Array.isArray(value)) { errors.push("activities must be an array"); return []; }
   return value.flatMap((item, index) => {
-    if (!isRecord(item) || typeof item.category !== "string" || item.category.trim().length === 0 || typeof item.scale !== "string" || !(item.scale in ACTIVITY_BASE_XP) || !Number.isSafeInteger(item.durationMinutes) || item.durationMinutes < 0 || !Array.isArray(item.classifications)) { errors.push(`activities[${index}] is invalid`); return []; }
-    const classifications = item.classifications.flatMap((classification, classificationIndex) => {
-      if (!isRecord(classification) || typeof classification.stat !== "string" || !CORE_STAT_KEYS.includes(classification.stat as CoreStatKey) || !Number.isSafeInteger(classification.weight) || classification.weight <= 0) { errors.push(`activities[${index}].classifications[${classificationIndex}] is invalid`); return []; }
-      return [{ stat: classification.stat as CoreStatKey, weight: Number(classification.weight) }];
+    if (!isRecord(item)) { errors.push(`activities[${index}] is invalid`); return []; }
+    const { category, scale, durationMinutes, classifications: rawClassifications } = item;
+    if (typeof category !== "string" || category.trim().length === 0 || typeof scale !== "string" || !(scale in ACTIVITY_BASE_XP) || !Number.isSafeInteger(durationMinutes) || !Array.isArray(rawClassifications)) { errors.push(`activities[${index}] is invalid`); return []; }
+    const safeDurationMinutes = Number(durationMinutes);
+    if (safeDurationMinutes < 0) { errors.push(`activities[${index}] is invalid`); return []; }
+    const classifications = rawClassifications.flatMap((classification, classificationIndex) => {
+      if (!isRecord(classification)) { errors.push(`activities[${index}].classifications[${classificationIndex}] is invalid`); return []; }
+      const { stat, weight } = classification;
+      if (typeof stat !== "string" || !CORE_STAT_KEYS.includes(stat as CoreStatKey) || !Number.isSafeInteger(weight)) { errors.push(`activities[${index}].classifications[${classificationIndex}] is invalid`); return []; }
+      const safeWeight = Number(weight);
+      if (safeWeight <= 0) { errors.push(`activities[${index}].classifications[${classificationIndex}] is invalid`); return []; }
+      return [{ stat: stat as CoreStatKey, weight: safeWeight }];
     });
     const uniqueStats = new Set(classifications.map((classification) => classification.stat));
     if (classifications.length === 0 || uniqueStats.size !== classifications.length || classifications.reduce((total, classification) => total + classification.weight, 0) !== 100) errors.push(`activities[${index}] classifications must contain unique core statistics totaling 100`);
-    return [{ category: item.category.trim(), scale: item.scale as ActivityScale, durationMinutes: Number(item.durationMinutes), classifications }];
+    return [{ category: category.trim(), scale: scale as ActivityScale, durationMinutes: safeDurationMinutes, classifications }];
   });
 }
 
@@ -57,14 +65,17 @@ function readEmotions(value: unknown, errors: string[]): OracleResponse["emotion
   return value.map((item, index) => ({ name: readText(isRecord(item) ? item.name : undefined, `emotions[${index}].name`, errors) }));
 }
 
-function readEvidence(value: unknown, field: "contractEvidence" | "bossEvidence", idField: "contractId" | "bossId", errors: string[]): Array<{ contractId: string; rationale: string }> | Array<{ bossId: string; rationale: string }> {
+function readEvidence(value: unknown, field: "contractEvidence" | "bossEvidence", idField: "contractId" | "bossId", errors: string[]): Array<{ contractId?: string; bossId?: string; rationale: string }> {
   if (!Array.isArray(value)) { errors.push(`${field} must be an array`); return []; }
-  return value.flatMap((item, index) => {
-    if (!isRecord(item)) { errors.push(`${field}[${index}] must be an object`); return []; }
+  const evidence: Array<{ contractId?: string; bossId?: string; rationale: string }> = [];
+  for (const [index, item] of value.entries()) {
+    if (!isRecord(item)) { errors.push(`${field}[${index}] must be an object`); continue; }
     const rationale = readText(item.rationale, `${field}[${index}].rationale`, errors);
     const id = readText(item[idField], `${field}[${index}].${idField}`, errors);
-    return idField === "contractId" ? [{ contractId: id, rationale }] : [{ bossId: id, rationale }];
-  });
+    if (idField === "contractId") evidence.push({ contractId: id, rationale });
+    else evidence.push({ bossId: id, rationale });
+  }
+  return evidence;
 }
 
 function readText(value: unknown, field: string, errors: string[]): string {

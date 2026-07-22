@@ -4,6 +4,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:core": "node --test tests/unit/process-diary-entry.test.ts tests/unit/oracle-response.test.ts tests/unit/progression.test.ts tests/unit/world-memory.test.ts tests/unit/contracts.test.ts tests/unit/bosses.test.ts tests/unit/boss-evidence.test.ts tests/unit/economy.test.ts tests/unit/game-director.test.ts tests/unit/guilds.test.ts tests/unit/official-names.test.ts"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test:core": "node --test tests/unit/process-diary-entry.test.ts tests/unit/oracle-response.test.ts tests/unit/progression.test.ts tests/unit/world-memory.test.ts tests/unit/contracts.test.ts tests/unit/bosses.test.ts tests/unit/boss-evidence.test.ts tests/unit/economy.test.ts tests/unit/game-director.test.ts tests/unit/guilds.test.ts tests/unit/official-names.test.ts tests/unit/game-balance-repository.test.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "typescript": "^5.8.2"
   }
 }
