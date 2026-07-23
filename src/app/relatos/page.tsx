@@ -51,13 +51,13 @@ export default function RelatosPage() {
 
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">📖 El libro de tus días</span>
+      <span className="eyebrow">📖 Tus memorias inmortales</span>
       <h1 className="headline">Relatos</h1>
     </div>
 
     {error && <section className="result error">{error}</section>}
     {!error && pages === null && <p className="relatos-hint">Abriendo el códice…</p>}
-    {pages !== null && pages.length === 0 && <p className="relatos-hint">Aún no has escrito ninguna página. Vuelve al Diario y relata tu primer día.</p>}
+    {pages !== null && pages.length === 0 && <p className="relatos-hint">Tu leyenda aún no tiene páginas. Regresa al Diario y forja tu primer relato.</p>}
 
     {pages !== null && pages.length > 0 && <>
       {(year !== null) && <button type="button" className="library-back" onClick={() => (month !== null ? setMonth(null) : setYear(null))}>‹ {month !== null ? monthName(month) : `Edad ${year}`}</button>}

@@ -11,7 +11,7 @@ const TYPE_LABELS: Record<string, string> = {
   conocimiento: "Conocimientos",
   herramienta: "Herramientas",
   objeto: "Objetos",
-  organizacion: "Organizaciones"
+  organizacion: "Reinos y Órdenes"
 };
 const TYPE_ORDER = ["personaje", "lugar", "conocimiento", "herramienta", "objeto", "organizacion"];
 
