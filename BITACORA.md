@@ -2,6 +2,21 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Fase 0 (estadísticas) + Fase 1 (El Mundo vivo)
+
+- **Bug encontrado y arreglado:** las estadísticas base NUNCA subían. El RPC del Motor solo toca
+  `disciplina`; no incrementa arte/tecnologia/vitalidad/social/sabiduria. Se acreditan ahora en la
+  capa de app (`supabase-player-repository.ts`) desde las clasificaciones de cada actividad, tras el
+  Motor. (Monedas y XP ya funcionaban tras el fix anterior — Fernando confirmó 2 monedas.)
+- **Reset:** `supabase/reset_progress.sql` (SQL Editor) pone en cero XP/nivel/stats/gremios/monedas,
+  conservando diario y mundo. Opcional: borrar world_entities para regenerarlas con alias/semblanza.
+- **Fase 1 arrancada:** la Oráculo emite **alias épico** + **descripción evolutiva (≤250)** por entidad;
+  la persistencia enriquece alias/semblanza al re-mencionar (conservando el descubrimiento). En **Mundo**:
+  sección **Gremios · Afinidad** (barra de maestría, clic → glosario) y **ficha de entidad** (alias, primera
+  aparición, semblanza) al tocar una tarjeta. "Organizaciones" → "Reinos y Órdenes".
+- **Nota arquitectura:** los incrementos de stats van en la app, no en el RPC determinista (evita
+  migración). Ideal a futuro: mover esa lógica al RPC. Registrado como deuda.
+
 ## 2026-07-22 — Base sólida: XP/monedas conectadas, puntos 1–10, glosario, ícono
 
 - **Fix de desconexiones Motor→RPC (base sólida):** `RunMotor` ahora emite `playerExperienceDelta`
