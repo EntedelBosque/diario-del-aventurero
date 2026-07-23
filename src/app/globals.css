@@ -168,6 +168,21 @@ textarea.journal {
 .card-row .row-meta { font-family: var(--font-garamond), serif; font-style: italic; font-size: .82rem; color: var(--ink-muted); }
 .card-row .reward-cost { font-family: var(--font-cinzel), serif; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
 
+.card-row .row-alias { font-family: var(--font-garamond), serif; font-style: italic; font-size: .85rem; color: var(--gold); }
+
+/* Gremios · Afinidad (Mundo) */
+.affinity-row { display: flex; align-items: center; gap: .7rem; width: 100%; padding: .7rem .9rem; border-radius: var(--radius); border: 1px solid var(--brass-dim); background: linear-gradient(var(--surface-high), var(--surface)); box-shadow: inset 3px 0 0 var(--brass-dim), 0 3px 10px rgba(0,0,0,.35); cursor: pointer; color: var(--ink); text-align: left; }
+.affinity-emoji { font-size: 1.2rem; }
+.affinity-body { flex: 1; display: flex; flex-direction: column; gap: .3rem; }
+.affinity-name { font-family: var(--font-cinzel), serif; font-size: .82rem; letter-spacing: .02em; }
+.affinity-bar { height: 5px; border-radius: 3px; background: rgba(0,0,0,.25); overflow: hidden; }
+.affinity-bar > span { display: block; height: 100%; background: linear-gradient(to right, var(--brass), var(--gold)); }
+.affinity-points { font-family: var(--font-cinzel), serif; font-size: 1rem; color: var(--gold); min-width: 1.5rem; text-align: right; }
+
+/* Ficha de entidad */
+.entity-alias { font-family: var(--font-garamond), serif; font-style: italic; font-size: 1.05rem; color: var(--burgundy); margin: .2rem 0 0; }
+.entity-tag { font-family: var(--font-cinzel), serif; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--brass); margin-top: .8rem; }
+
 .wallet { text-align: center; padding: 1.5rem 1rem; margin-bottom: .5rem; }
 .wallet .coins { display: block; font-family: var(--font-cinzel), serif; font-size: 2.4rem; color: var(--burgundy); line-height: 1; }
 .wallet .coins-label { font-family: var(--font-cinzel), serif; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; opacity: .65; }

@@ -8,6 +8,7 @@ import { RunMotor } from "../../../core/application/run-motor.ts";
 import { SupabaseMotorRepository } from "../../../adapters/persistence/supabase-motor-repository.ts";
 import { SupabaseGameBalanceRepository } from "../../../adapters/persistence/supabase-game-balance-repository.ts";
 import { persistWorldEntities } from "../../../adapters/persistence/supabase-world-repository.ts";
+import { incrementPlayerStats, allocateStatGains } from "../../../adapters/persistence/supabase-player-repository.ts";
 
 export async function GET() {
   const session = await getAuthenticatedUser();
@@ -45,6 +46,12 @@ export async function POST(request: Request) {
         const guildTotals = new Map<string, number>();
         for (const activity of effects.activities) for (const award of activity.guildAwards) guildTotals.set(award.guildCode, (guildTotals.get(award.guildCode) ?? 0) + award.experience);
         rewards = { totalXp: effects.playerExperience, guildAwards: [...guildTotals.entries()].map(([guildCode, experience]) => ({ guildCode, experience })) };
+        try {
+          const statDeltas = allocateStatGains(effects.activities.map((activity) => ({ totalXp: activity.totalXp, classifications: activity.classifications as Array<{ stat: string; weight: number }> })));
+          await incrementPlayerStats(entry.playerId, statDeltas);
+        } catch (error) {
+          console.error("Player stat increment failed for entry", entry.id, error);
+        }
       } catch (error) {
         motorError = error instanceof Error ? error.message : "El Motor no pudo procesar la entrada";
         console.error("Motor execution failed for entry", entry.id, error);

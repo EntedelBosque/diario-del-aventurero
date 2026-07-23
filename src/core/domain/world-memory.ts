@@ -7,6 +7,7 @@ export type EntitySuggestion = {
   name: string;
   alias?: string;
   category?: string;
+  description?: string;
 };
 
 export type WorldEntity = {

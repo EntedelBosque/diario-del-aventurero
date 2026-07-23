@@ -57,7 +57,7 @@ function readEntitySuggestions(value: unknown, errors: string[]): EntitySuggesti
   if (!Array.isArray(value)) { errors.push("entitySuggestions must be an array"); return []; }
   return value.flatMap((item, index) => {
     if (!isRecord(item) || typeof item.type !== "string" || typeof item.name !== "string") { errors.push(`entitySuggestions[${index}] is invalid`); return []; }
-    try { return [{ type: item.type.trim(), name: normalizeEntityName(item.name), alias: typeof item.alias === "string" ? normalizeEntityName(item.alias) : undefined, category: typeof item.category === "string" ? normalizeEntityName(item.category) : undefined }]; }
+    try { return [{ type: item.type.trim(), name: normalizeEntityName(item.name), alias: typeof item.alias === "string" ? normalizeEntityName(item.alias) : undefined, category: typeof item.category === "string" ? normalizeEntityName(item.category) : undefined, ...(typeof item.description === "string" && item.description.trim().length > 0 ? { description: item.description.trim().slice(0, 250) } : {}) }]; }
     catch { errors.push(`entitySuggestions[${index}] is invalid`); return []; }
   });
 }
