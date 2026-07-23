@@ -2,6 +2,25 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Base sólida: XP/monedas conectadas, puntos 1–10, glosario, ícono
+
+- **Fix de desconexiones Motor→RPC (base sólida):** `RunMotor` ahora emite `playerExperienceDelta`
+  y `currencyDelta`. Antes el RPC leía esos campos pero el Motor mandaba `playerExperience` y nada
+  de monedas → **el XP del jugador y las monedas NUNCA se acreditaban en producción**. Sin migración
+  (el RPC ya estaba correcto). Guild XP sí funcionaba (campo `activities` coincidía).
+- **Reescala de puntos a 1–10 por actividad** (base 1–6, tiempo 0–2, gente 0–1, descubrimiento 0–1).
+  **Porqué:** Fernando no quiere ganancias "extremistas" (+65) que inflen los totales tras 100 entradas.
+  Tests de progresión actualizados. La curva de nivel se mantiene (base_xp 100), leveleo más lento pero sano.
+- **Monedas = XP de la entrada** (`currencyDelta = playerExperience`). Mercado ya mostrará saldo real.
+- **Glosario:** tocar una estadística o gremio abre un popover con qué significa y cómo se gana
+  (`src/shared/glossary.ts` + `GlossaryModal`).
+- **Relatos:** páginas numeradas (la más antigua = Página 1). Emojis RPG en los encabezados.
+- **Barra inferior** subida (evita el corte del home indicator del iPhone).
+- **Ícono de la app:** libro + pluma (`src/app/icon.svg` + PNGs regenerados con sharp).
+
+### Pendiente del lote (siguiente): generadores de contenido (contratos/mercado), pie de página en
+### Relatos con lo ganado ese día (stats/objetos/boss/misión), y rediseño "librería" de Relatos.
+
 ## 2026-07-22 — Pestañas Mundo/Misiones/Mercado + auditoría del proyecto
 
 - **Mundo funcional:** se cableó la escritura de `entitySuggestions` → `world_entities` (upsert

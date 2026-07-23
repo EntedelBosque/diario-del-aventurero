@@ -2,6 +2,17 @@
 > Primer compacto para retomar el proyecto. Léelo antes que nada.
 > Última actualización: 2026-07-22 · Versión: 0.15.0
 
+## Stack y conexiones (para cualquier agente/IA que retome)
+- **App:** Next.js 15 (App Router) + React 19, TypeScript, PWA. Hosting en **Vercel** (deploy auto en push a `main`).
+- **Datos:** **Supabase** (Postgres) = fuente de verdad. Cliente navegador con `@supabase/ssr` (anon key);
+  servidor con service-role (`src/adapters/persistence/supabase-server.ts`). Migraciones en `supabase/migrations/`.
+- **IA (Oráculo):** proveedor intercambiable; por defecto **Groq**, alternativa Gemini (`src/adapters/oracle/`).
+- **Secretos:** NO están en el repo (`.env`/`.env.local` en `.gitignore`). Viven en Vercel env + tu `.env.local`
+  local: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, la API key del proveedor IA.
+- **Nota para Codex/otras IAs:** cualquier agente con el repo sabrá que usamos Supabase y cómo se conecta
+  (código + migraciones + estos docs). Lo único que NO tendrá son las llaves; hay que dárselas por env. La skill
+  `diario-del-aventurero` es de Claude Code, pero los archivos que mantiene (este + BITACORA.md) son texto portable.
+
 ## En una línea
 RPG personal persistente: Fernando escribe entradas de diario en lenguaje natural, un
 Oráculo IA las convierte en narrativa + JSON estructurado, y un Motor determinista aplica
