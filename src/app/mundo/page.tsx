@@ -6,6 +6,7 @@ import { GlossaryModal } from "../GlossaryModal.tsx";
 import { formatAdventurerTimestamp } from "../../shared/format-date.ts";
 import { OFFICIAL_GUILD_CODES } from "../../core/domain/guilds.ts";
 import { guildName } from "../../shared/guilds.ts";
+import { guildTier } from "../../shared/guild-tiers.ts";
 import { glossaryEntry } from "../../shared/glossary.ts";
 
 type Entity = { id: string; type: string; name: string; alias: string | null; aliases: string[]; category: string | null; description: string | null; discoveredAt: string };
@@ -51,8 +52,6 @@ export default function MundoPage() {
     return [...byType.keys()].sort((a, b) => (TYPE_ORDER.indexOf(a) + 99) - (TYPE_ORDER.indexOf(b) + 99)).map((type) => ({ type, items: byType.get(type)! }));
   }, [entities]);
 
-  const maxMastery = Math.max(10, ...OFFICIAL_GUILD_CODES.map((code) => guilds[code] ?? 0));
-
   return <main>
     <div className="chapter-header">
       <span className="eyebrow">🗺️ La memoria del reino</span>
@@ -64,11 +63,14 @@ export default function MundoPage() {
       <div className="collection-list">
         {OFFICIAL_GUILD_CODES.map((code) => {
           const mastery = guilds[code] ?? 0;
-          return <button key={code} type="button" className="affinity-row" onClick={() => setTerm(code)}>
+          const tier = guildTier(mastery);
+          const status = tier.joined ? (tier.tierName ? `Miembro · ${tier.tierName}` : "Miembro") : `Faltan ${tier.nextAt - mastery} para unirte`;
+          return <button key={code} type="button" className={`affinity-row${tier.joined ? " joined" : ""}`} onClick={() => setTerm(code)}>
             <span className="affinity-emoji" aria-hidden="true">{glossaryEntry(code)?.emoji ?? "⚜️"}</span>
             <span className="affinity-body">
               <span className="affinity-name">{guildName(code)}</span>
-              <span className="affinity-bar"><span style={{ width: `${Math.round((mastery / maxMastery) * 100)}%` }} /></span>
+              <span className="affinity-status">{status}</span>
+              <span className="affinity-bar"><span style={{ width: `${Math.min(100, Math.round((mastery / tier.nextAt) * 100))}%` }} /></span>
             </span>
             <span className="affinity-points">{mastery}</span>
           </button>;

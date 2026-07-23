@@ -8,6 +8,7 @@ import { guildName } from "../shared/guilds.ts";
 import { QuillIcon } from "../shared/icons/QuillIcon.tsx";
 import { BottomNav } from "./BottomNav.tsx";
 import { StatsPanel } from "./StatsPanel.tsx";
+import { PageCard, type PageData } from "./PageCard.tsx";
 
 type DiaryResult = { title?: string; narrative?: string; occurredAt?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string; rewards?: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> } };
 
@@ -16,10 +17,15 @@ export default function DiaryPage() {
   const [result, setResult] = useState<DiaryResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [hasSession, setHasSession] = useState(false);
+  const [lastPage, setLastPage] = useState<PageData | null>(null);
 
   useEffect(() => {
     const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
     supabase.auth.getUser().then(({ data }) => setHasSession(Boolean(data.user)));
+    fetch("/api/diary-entries")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: { pages?: PageData[] } | null) => setLastPage(body?.pages?.[0] ?? null))
+      .catch(() => {});
   }, []);
 
   async function logout() {
@@ -82,6 +88,10 @@ export default function DiaryPage() {
         {result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}
       </article>
     ))}
+    {!result && lastPage && <>
+      <p className="ultimo-relato-label">📖 Tu último relato…</p>
+      <PageCard page={lastPage} />
+    </>}
     <BottomNav active="diario" />
   </main>;
 }

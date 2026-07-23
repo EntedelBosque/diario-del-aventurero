@@ -14,7 +14,7 @@ export class SupabaseDiaryEntryRepository implements DiaryEntryRepository {
     return data ? toStoredEntry(data as DiaryRow & { oracle_interpretations?: InterpretationRow[] }) : null;
   }
 
-  async listAcceptedPages(playerId: string): Promise<Array<{ id: string; occurredAt: Date; title?: string; narrative: string }>> {
+  async listAcceptedPages(playerId: string): Promise<Array<{ id: string; occurredAt: Date; response: OracleResponse }>> {
     const { data, error } = await this.supabase
       .from("diary_entries")
       .select("id, occurred_at, oracle_interpretations!inner(status, response)")
@@ -25,7 +25,7 @@ export class SupabaseDiaryEntryRepository implements DiaryEntryRepository {
     return (data ?? []).flatMap((row) => {
       const response = readInterpretation(row.oracle_interpretations)?.response;
       if (!response) return [];
-      return [{ id: row.id as string, occurredAt: new Date(row.occurred_at as string), title: response.title, narrative: response.narrative }];
+      return [{ id: row.id as string, occurredAt: new Date(row.occurred_at as string), response }];
     });
   }
 

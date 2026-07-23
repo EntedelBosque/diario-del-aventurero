@@ -9,13 +9,35 @@ import { SupabaseMotorRepository } from "../../../adapters/persistence/supabase-
 import { SupabaseGameBalanceRepository } from "../../../adapters/persistence/supabase-game-balance-repository.ts";
 import { persistWorldEntities } from "../../../adapters/persistence/supabase-world-repository.ts";
 import { incrementPlayerStats, allocateStatGains } from "../../../adapters/persistence/supabase-player-repository.ts";
+import { calculateExperience } from "../../../core/domain/progression.ts";
+import type { OracleResponse } from "../../../core/domain/oracle-response.ts";
+
+function computePageGains(response: OracleResponse) {
+  const activities: Array<{ totalXp: number; classifications: Array<{ stat: string; weight: number }> }> = [];
+  let xp = 0;
+  for (const activity of response.activities) {
+    try {
+      const totalXp = calculateExperience({ scale: activity.scale, durationMinutes: activity.durationMinutes, classifications: activity.classifications, discoveries: [], participants: [], bonusXp: 0 }).totalXp;
+      xp += totalXp;
+      activities.push({ totalXp, classifications: activity.classifications });
+    } catch { /* actividad inválida: se omite */ }
+  }
+  const statDeltas = allocateStatGains(activities);
+  return {
+    xp, coins: xp,
+    stats: Object.entries(statDeltas).map(([key, delta]) => ({ key, delta })),
+    discoveries: response.entitySuggestions.map((entity) => entity.alias ?? entity.name),
+    missions: response.contractEvidence.length,
+    bosses: response.bossEvidence.length
+  };
+}
 
 export async function GET() {
   const session = await getAuthenticatedUser();
   if (!session.user) return withSessionCookies(NextResponse.json({ error: "Autenticación requerida" }, { status: 401 }), session.cookiesToSet);
   try {
     const pages = await new SupabaseDiaryEntryRepository().listAcceptedPages(session.user.id);
-    return withSessionCookies(NextResponse.json({ pages: pages.map((page) => ({ id: page.id, occurredAt: page.occurredAt.toISOString(), title: page.title, narrative: page.narrative })) }), session.cookiesToSet);
+    return withSessionCookies(NextResponse.json({ pages: pages.map((page) => ({ id: page.id, occurredAt: page.occurredAt.toISOString(), title: page.response.title, narrative: page.response.narrative, gains: computePageGains(page.response) })) }), session.cookiesToSet);
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 });
   }

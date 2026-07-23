@@ -98,6 +98,18 @@ textarea.journal {
 .guild-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
 .guild-chip { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-cinzel), serif; font-size: .68rem; letter-spacing: .03em; color: var(--ink-on-parchment); background: rgba(176,141,87,.12); border: 1px solid var(--brass-dim); border-radius: 999px; padding: .28rem .7rem; cursor: pointer; }
 .guild-chip em { font-style: normal; font-weight: 600; color: var(--burgundy); }
+.guild-chip .guild-tier { color: var(--brass); }
+
+/* Pie de ganancias por página (Relatos / último relato) */
+.page-gains-label { text-align: center; font-family: var(--font-cinzel), serif; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--brass); margin-bottom: .6rem; }
+.page-gains { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
+.page-gains .gain { font-family: var(--font-cinzel), serif; font-size: .68rem; letter-spacing: .02em; color: var(--ink-on-parchment); background: rgba(176,141,87,.14); border: 1px solid var(--brass-dim); border-radius: 999px; padding: .22rem .6rem; }
+
+.ultimo-relato-label { text-align: center; font-family: var(--font-cinzel), serif; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); margin: 1.75rem 0 -.25rem; }
+
+/* Estado de afinidad de gremio (Mundo) */
+.affinity-status { font-family: var(--font-garamond), serif; font-style: italic; font-size: .72rem; color: var(--ink-muted); }
+.affinity-row.joined .affinity-name { color: var(--gold); }
 
 /* Número de página en Relatos */
 .page-folio { text-align: center; font-family: var(--font-cinzel), serif; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--brass); margin-bottom: .5rem; }

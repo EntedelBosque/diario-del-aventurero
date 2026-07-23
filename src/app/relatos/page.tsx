@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { formatAdventurerTimestamp, monthName } from "../../shared/format-date.ts";
+import { monthName } from "../../shared/format-date.ts";
 import { BottomNav } from "../BottomNav.tsx";
+import { PageCard, type PageData } from "../PageCard.tsx";
 
-type Page = { id: string; title?: string; narrative: string; occurredAt: string };
+type Page = PageData;
 
 export default function RelatosPage() {
   const [pages, setPages] = useState<Page[] | null>(null);
@@ -78,20 +79,9 @@ export default function RelatosPage() {
         </button></li>)}
       </ul>}
 
-      {year !== null && month !== null && pagesOfMonth.map((page) => {
-        const timestamp = formatAdventurerTimestamp(new Date(page.occurredAt));
-        return <article key={page.id} className="parchment page-card">
-          <div className="page-folio">📖 Página {pageNumbers.get(page.id)}</div>
-          <div className="page-timestamp">
-            {timestamp.celestialEvent && <span className="celestial">{timestamp.celestialEvent}</span>}
-            <span className="ts-date">{timestamp.dateLine}</span>
-            <span className="ts-time">{timestamp.timeLine}</span>
-          </div>
-          {page.title && <h2 className="page-title">{page.title}</h2>}
-          <div className="page-divider"><span>◆</span></div>
-          <p className="page-narrative">{page.narrative}</p>
-        </article>;
-      })}
+      {year !== null && month !== null && pagesOfMonth.map((page) =>
+        <PageCard key={page.id} page={page} folio={pageNumbers.get(page.id)} />
+      )}
     </>}
 
     <BottomNav active="relatos" />
