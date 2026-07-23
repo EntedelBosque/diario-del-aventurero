@@ -35,6 +35,17 @@ progresión (XP, gremios, contratos, bosses, economía) sobre Supabase como fuen
 - Iterar el diseño por la línea de "códice iluminado" + más RPG (grano, marco, tomos).
 - 5 pestañas ya funcionales (Diario, Relatos, Mundo, Misiones, Mercado).
 
+## Roadmap por fases (acordado 2026-07-22)
+Orden recomendado: **F1 El Mundo vivo** → F2 Libro épico → F3 Generadores → F4 Economía/combate → F5 Robustez.
+- **F1 (siguiente):** ficha de entidad (popover con 1ª aparición + descripción evolutiva ≤250 que la
+  Oráculo alimenta), alias épico de leyenda para personajes/lugares, reputación/afinidad por Reino.
+  *Todas requieren que la Oráculo emita descripción/alias por entidad (cambio de contrato) — factible.*
+- **F2:** tono más épico (prompt), pie de página por página con lo ganado (stats/objetos/misión/boss), rediseño "librería".
+- **F3:** generadores de contratos (Director del Juego) y artículos de Mercado (contenido de Codex).
+- **F4:** canjear monedas; bosses/misiones con daño. **F5:** tests, paginación, verificar backups.
+- Feasibilidad confirmada a Fernando: descripción evolutiva de personajes ✔, reputación por Reino ✔, alias épicos ✔.
+- Nota: Claude Pro NO mejora el PWA (solo la experiencia de desarrollo con Claude Code).
+
 ## Brechas conocidas (de la auditoría 2026-07-22)
 1. **Economía desconectada** — `RunMotor` no emite `currencyDelta`; las monedas nunca se acreditan
    (Mercado siempre 0). Cablear economía es lo #1 para que Mercado tenga sentido.
