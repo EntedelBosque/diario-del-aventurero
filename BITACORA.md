@@ -2,6 +2,25 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-22 — Gremios con pertenencia/niveles, último relato, pie de ganancias
+
+- **Gremios ahora se "unen":** `guild-tiers.ts` — te unes a los **50** de afinidad; cada **+100** subes
+  de material (150 Madera, 250 Piedra, 350 Bronce…). En Diario solo aparecen los gremios a los que
+  perteneces (≥50), con su nivel; en Mundo se ve el estado y el progreso al siguiente escalón.
+- **Diario:** persiste "Tu último relato…" (última página guardada) hasta que se añada otra.
+- **Pie de ganancias por página** (Relatos + último relato): XP, monedas, deltas de estadísticas,
+  hallazgos y misiones/bosses — derivados de la respuesta guardada del Oráculo (sin tocar tablas de
+  auditoría). Componente `PageCard` compartido.
+- **Reset:** se quitaron las líneas de borrado del mundo (memoria append-only por diseño).
+
+### Decisión: balance de afinidad de gremios (escala 1–10)
+- **Por qué:** con la escala 1–10, un gremio gana ~3–6 por entrada en su categoría → **unirse (50)** ≈
+  ~2 semanas de actividad casi diaria en ese dominio; **~100** ≈ 3–4 semanas; cada nivel (+100) ≈ ~1 mes.
+  Es un slow-burn intencional (solo "vives" los gremios que de verdad practicas).
+- **Cómo aplica:** si se siente lento/rápido, ajustar `GUILD_JOIN_THRESHOLD`/el paso de 100 en
+  `guild-tiers.ts` o el XP por actividad en `progression.ts`.
+- **Fecha:** 2026-07-22
+
 ## 2026-07-22 — Fase 0 (estadísticas) + Fase 1 (El Mundo vivo)
 
 - **Bug encontrado y arreglado:** las estadísticas base NUNCA subían. El RPC del Motor solo toca
