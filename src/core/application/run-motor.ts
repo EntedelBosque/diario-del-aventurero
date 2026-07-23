@@ -24,7 +24,9 @@ export class RunMotor {
       awardedExperience += experience.totalXp;
     }
     const playerExperience = awardedExperience;
-    const effects: MotorEffects = { playerId: entry.playerId, worldEventId: entry.worldEventId, rulesVersion, playerExperience, playerLevel: levelForExperience(playerExperience), activities, contractEvidence: entry.oracleResponse.contractEvidence, bossEvidence: entry.oracleResponse.bossEvidence, entry };
+    // El RPC persist_motor_effects lee playerExperienceDelta (XP a acreditar) y currencyDelta
+    // (monedas). Las monedas se otorgan 1:1 con la XP de la entrada.
+    const effects: MotorEffects = { playerId: entry.playerId, worldEventId: entry.worldEventId, rulesVersion, playerExperience, playerExperienceDelta: playerExperience, currencyDelta: playerExperience, playerLevel: levelForExperience(playerExperience), activities, contractEvidence: entry.oracleResponse.contractEvidence, bossEvidence: entry.oracleResponse.bossEvidence, entry };
     await this.repository.persistAtomically(effects);
     return effects;
   }

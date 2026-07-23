@@ -28,7 +28,7 @@ export default function MisionesPage() {
 
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">Los pactos del destino</span>
+      <span className="eyebrow">⚔️ Los pactos del destino</span>
       <h1 className="headline">Misiones</h1>
     </div>
 

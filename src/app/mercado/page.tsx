@@ -22,7 +22,7 @@ export default function MercadoPage() {
 
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">El bazar del reino</span>
+      <span className="eyebrow">🪙 El bazar del reino</span>
       <h1 className="headline">Mercado</h1>
     </div>
 

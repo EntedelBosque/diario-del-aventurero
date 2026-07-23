@@ -14,7 +14,7 @@ test("calculates XP with every official component", () => {
   });
 
   assert.deepEqual(result, {
-    baseXp: 20, timeXp: 10, peopleXp: 8, discoveryXp: 20, bonusXp: 5, totalXp: 63
+    baseXp: 2, timeXp: 1, peopleXp: 1, discoveryXp: 1, bonusXp: 5, totalXp: 10
   });
 });
 
@@ -24,9 +24,9 @@ test("caps the time component and grants discovery only once", () => {
     classifications: [{ stat: "arte", weight: 100 }],
     discoveries: [{ type: "habilidad", isFirstDiscovery: false }], participants: [], bonusXp: 0
   });
-  assert.equal(result.timeXp, 50);
+  assert.equal(result.timeXp, 2);
   assert.equal(result.discoveryXp, 0);
-  assert.equal(result.totalXp, 200);
+  assert.equal(result.totalXp, 8);
 });
 
 test("requires a complete activity classification", () => {

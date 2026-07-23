@@ -44,7 +44,7 @@ export default function DiaryPage() {
 
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">Páginas de lo Inexplorado</span>
+      <span className="eyebrow">✒️ Páginas de lo Inexplorado</span>
       <h1 className="headline">Diario de un Aventurero</h1>
     </div>
     {hasSession

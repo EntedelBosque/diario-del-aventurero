@@ -37,13 +37,21 @@ export default function RelatosPage() {
     return byYear;
   }, [pages]);
 
+  // Numeración global del libro: la más antigua es la Página 1.
+  const pageNumbers = useMemo(() => {
+    const ascending = [...(pages ?? [])].sort((a, b) => new Date(a.occurredAt).getTime() - new Date(b.occurredAt).getTime());
+    const map = new Map<string, number>();
+    ascending.forEach((page, index) => map.set(page.id, index + 1));
+    return map;
+  }, [pages]);
+
   const years = [...tree.keys()].sort((a, b) => b - a);
   const monthsOfYear = year !== null ? [...(tree.get(year)?.keys() ?? [])].sort((a, b) => b - a) : [];
   const pagesOfMonth = year !== null && month !== null ? (tree.get(year)?.get(month) ?? []) : [];
 
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">El libro de tus días</span>
+      <span className="eyebrow">📖 El libro de tus días</span>
       <h1 className="headline">Relatos</h1>
     </div>
 
@@ -73,6 +81,7 @@ export default function RelatosPage() {
       {year !== null && month !== null && pagesOfMonth.map((page) => {
         const timestamp = formatAdventurerTimestamp(new Date(page.occurredAt));
         return <article key={page.id} className="parchment page-card">
+          <div className="page-folio">📖 Página {pageNumbers.get(page.id)}</div>
           <div className="page-timestamp">
             {timestamp.celestialEvent && <span className="celestial">{timestamp.celestialEvent}</span>}
             <span className="ts-date">{timestamp.dateLine}</span>

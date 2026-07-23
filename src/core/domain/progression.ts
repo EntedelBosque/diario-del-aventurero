@@ -1,12 +1,14 @@
 import { CORE_STAT_KEYS, type CoreStatKey } from "./adventurer.ts";
 
+// Escala compacta 1–10 por actividad: cada componente aporta poco para que los totales
+// crezcan de forma lenta y legible (nunca "+65 de golpe"). Máximo normal por actividad = 10.
 export const ACTIVITY_BASE_XP = {
-  muy_pequena: 10,
-  pequena: 20,
-  media: 35,
-  importante: 60,
-  extraordinaria: 100,
-  historica: 150
+  muy_pequena: 1,
+  pequena: 2,
+  media: 3,
+  importante: 4,
+  extraordinaria: 5,
+  historica: 6
 } as const;
 
 export type ActivityScale = keyof typeof ACTIVITY_BASE_XP;
@@ -31,20 +33,12 @@ export type ExperienceBreakdown = {
   totalXp: number;
 };
 
-const DISCOVERY_XP: Readonly<Record<DiscoveryType, number>> = {
-  lugar: 10,
-  herramienta: 20,
-  personaje: 15,
-  conocimiento: 20,
-  habilidad: 25
-};
-
 export function calculateExperience(activity: ProgressActivity): ExperienceBreakdown {
   validateActivity(activity);
   const baseXp = ACTIVITY_BASE_XP[activity.scale];
   const timeXp = calculateTimeBonus(activity.durationMinutes);
-  const peopleXp = activity.participants.reduce((total, participant) => total + (participant.importance === "importante" ? 8 : 5), 0);
-  const discoveryXp = activity.discoveries.reduce((total, discovery) => total + (discovery.isFirstDiscovery ? DISCOVERY_XP[discovery.type] : 0), 0);
+  const peopleXp = activity.participants.length > 0 ? 1 : 0;
+  const discoveryXp = activity.discoveries.some((discovery) => discovery.isFirstDiscovery) ? 1 : 0;
   const totalXp = baseXp + timeXp + peopleXp + discoveryXp + activity.bonusXp;
 
   return {
@@ -71,11 +65,8 @@ export function levelForExperience(totalExperience: number): number {
 
 function calculateTimeBonus(minutes: number): number {
   if (!Number.isSafeInteger(minutes) || minutes < 0) throw new Error("durationMinutes must be a non-negative integer");
-  if (minutes <= 30) return 5;
-  if (minutes <= 60) return 10;
-  if (minutes <= 120) return 20;
-  if (minutes <= 240) return 35;
-  return 50;
+  if (minutes <= 60) return minutes <= 30 ? 0 : 1;
+  return minutes <= 240 ? 1 : 2;
 }
 
 function validateActivity(activity: ProgressActivity): void {

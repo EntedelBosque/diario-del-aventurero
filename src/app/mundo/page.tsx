@@ -40,7 +40,7 @@ export default function MundoPage() {
 
   return <main>
     <div className="chapter-header">
-      <span className="eyebrow">La memoria del reino</span>
+      <span className="eyebrow">🗺️ La memoria del reino</span>
       <h1 className="headline">Mundo</h1>
     </div>
 
