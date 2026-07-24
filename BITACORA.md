@@ -2,6 +2,18 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-23 (cont.) — Reseña unificada + corrección de reinos
+
+- **Reseña unificada:** la tarjeta que sale al enviar ahora es la misma `PageCard` que en Relatos, con
+  el pie COMPLETO: ✨XP, 🟡oro, 🔥Disciplina +1, deltas de estadística (🎨/📚…), ⚜️gremio y 🗺️hallazgos.
+  Antes la reseña fresca solo mostraba XP+gremio y no stats/disciplina — eso confundía ("no se muestran").
+- **Refresco instantáneo:** `cache:"no-store"` en las 3 llamadas GET + `force-dynamic` en /api/player +
+  refreshKey del StatsPanel. Los stats/disciplina deben verse sin cambiar de pestaña.
+- **Corrección de reinos (Seasons):** el prompt ahora exige (1) no confundir el reino del Aventurero con
+  el de otra persona, y (2) al corregir un dato, re-emitir TODAS las entidades afectadas (persona Y lugar)
+  con su semblanza actualizada. Si Seasons sigue "stale", el plan B es un editor manual de semblanza en la
+  ficha (endpoint PATCH world) — pendiente si persiste.
+
 ## 2026-07-23 — Living World (títulos vigentes/archivo), Disciplina (DEV-SPEC-019), fix refresco
 
 - **Fix refresco:** los stats/disciplina no se veían sin cambiar de pestaña. Causa: caché del navegador
