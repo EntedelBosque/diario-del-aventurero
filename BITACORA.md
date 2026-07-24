@@ -2,6 +2,20 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-23 (cont.) — 5 dev-specs de arquitectura recibidos (014–018)
+
+- Guardados como canon en `CODEX/`: **014 Logros**, **015 Compartir**, **016 Cuervo (notificaciones)**,
+  **017 Event Engine**, **018 Director**. Todos son "estructura/arquitectura, comportamiento en docs aparte".
+- **Análisis de dependencias (decisión de arquitecto):**
+  - **017 Event Engine** + **018 Director** = FOUNDATION. Desbloquean generación de misiones/contratos,
+    transiciones de Reino/Título (020), evolución de entidades y disparo del Cuervo.
+  - **014 Logros** → habilita **015 Compartir** (imagen del logro a Instagram/WhatsApp vía Canvas + Web Share).
+  - **016 Cuervo** entrega vía **Motor de Tiempo** (mismo job que el decay de Disciplina, DEV-SPEC-019 F2).
+  - 014 necesita **migración** (rareza/categoría/colecciones/ilustración/frase) + catálogo; sus condiciones
+    de desbloqueo son de otro doc + del Director.
+- **Orden recomendado:** (A) slice visible **Logros + Compartir** (con migración + catálogo + desbloqueos por
+  evento simples), o (B) foundation **Event Engine + Director**. Pendiente el steer de Fernando.
+
 ## 2026-07-23 (cont.) — DEV-SPEC-020: Estado Vigente + Historial inmutable
 
 - **Implementado sin migración** sobre `entity_history` (append-only, trigger anti-borrado). Cada cambio de
