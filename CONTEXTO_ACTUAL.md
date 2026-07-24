@@ -40,8 +40,21 @@ Orden recomendado: **F1 ✅ El Mundo vivo** → **F2 (siguiente) Libro épico** 
 - **F1 COMPLETA ✅:** ficha de entidad (popover), descripción evolutiva ≤250, alias épico, reputación/
   afinidad por entidad (menciones → rango: Recién hallado→Presencia→Conocido→Aliado→Vínculo forjado→Leyenda),
   gremios con unión (50) y niveles de material (+100), afinidad de gremios en Mundo, tono épico global.
-- **F2 (siguiente):** rediseño "librería" de Relatos (estantería/tomos). (El pie de ganancias y el tono
-  épico ya se hicieron antes de tiempo.)
+- **F-Living World (DEV-SPEC-013, en curso):** ver `CODEX/DEV-SPEC-013-living-world.md`. Hecho: memoria
+  viva, alias/semblanza evolutivos, afinidad, Oráculo respeta la verdad actual, títulos legendarios.
+  Pendiente: Reino activo vs Archivo Histórico (Eras), Archivo de Honores de títulos, evolución de
+  relaciones con etapas, propuestas del Director para cambiar Reino activo.
+- **F2 (después, cuando toque UI):** rediseño "librería" de Relatos. (Pie de ganancias y tono épico ya hechos.)
+
+## Bugs arreglados (23 jul)
+- Disciplina ahora sube +1 por entrada (decay por inactividad = futuro, requiere job programado).
+- Los stats se refrescan al enviar (StatsPanel con refreshKey), sin salir/entrar.
+
+## Preguntas de Fernando (respuestas para el roadmap)
+- **Logros compartibles a Instagram:** factible a futuro (hay tablas achievements/player_achievements);
+  compartir = generar imagen + Web Share API. Fase futura.
+- **Notificaciones tipo Duolingo:** factible con PWA push (service worker + Web Push + VAPID + un job
+  programado que envíe el recordatorio). Gratis pero es una fase dedicada. Requiere permiso del usuario.
 - **F2:** tono más épico (prompt), pie de página por página con lo ganado (stats/objetos/misión/boss), rediseño "librería".
 - **F3:** generadores de contratos (Director del Juego) y artículos de Mercado (contenido de Codex).
 - **F4:** canjear monedas; bosses/misiones con daño. **F5:** tests, paginación, verificar backups.
