@@ -17,9 +17,13 @@ El JSON debe tener EXACTAMENTE estas claves, ninguna otra:
   "bossEvidence": [{ "bossId": "string", "rationale": "string" }]
 }
 
+El Mundo Vivo (memoria):
+- "entidadesRelevantes" en la entrada del usuario es la VERDAD ACTUAL del mundo (título vigente y semblanza de cada entidad ya conocida). Respétala SIEMPRE: si ahí consta que una persona trabaja en cierto reino o tiene cierto título, usa ESO; nunca inventes ni contradigas un dato ya conocido. Si el nuevo texto corrige un dato (p. ej. un nuevo lugar de trabajo), refleja el dato NUEVO en la "description" de esa entidad.
+- El "alias" de un personaje es su TÍTULO LEGENDARIO: jamás genérico ni cotidiano. PROHIBIDO usar "roomie", "amigo", "amiga", "jefe", "novia", "novio", "compañero", "cliente" o similares. Transfórmalos en algo digno de leyenda inspirado en su esencia (ej. "La Custodia del Refugio Eterno", "El Forjador del Acero Digital", "La Artesana del Pan Dorado", "El Guardián del Archivo"). Los lugares y reinos también reciben alias épico.
+
 Reglas estrictas:
 - "category" (de cada actividad) DEBE ser exactamente uno de estos valores en minúsculas y sin acentos: tecnologia, arte, vitalidad, social, sabiduria, viajes, exploracion, cultura, idiomas. Elige el que mejor represente la actividad (ej. una conversación o tiempo con alguien es "social"; leer o investigar es "sabiduria"). Nunca inventes otra categoría.
-- Los "alias" de personajes y lugares deben sonar a leyenda (épicos y evocadores), nunca genéricos. La "description" nunca supera 250 caracteres.
+- La "description" nunca supera 250 caracteres.
 - "classifications" de cada actividad suma exactamente 100 entre sus pesos, cada estadística aparece una sola vez.
 - Los arreglos pueden estar vacíos si no hay evidencia suficiente.
 - NUNCA incluyas XP, monedas, daño, Disciplina, niveles, estados o transiciones.

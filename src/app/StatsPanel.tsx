@@ -9,7 +9,7 @@ type Stat = { key: string; label: string; value: number };
 type Guild = { code: string; mastery: number };
 type Summary = { displayName: string; characterClass: string; title: string; level: number; experience: number; stats: Stat[]; guilds: Guild[] };
 
-export function StatsPanel() {
+export function StatsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
   const [data, setData] = useState<Summary | null>(null);
   const [term, setTerm] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ export function StatsPanel() {
       .then((response) => (response.ok ? response.json() : null))
       .then((summary) => setData(summary as Summary | null))
       .catch(() => {});
-  }, []);
+  }, [refreshKey]);
 
   if (!data) return null;
 

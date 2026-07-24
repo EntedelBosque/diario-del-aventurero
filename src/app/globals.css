@@ -104,6 +104,7 @@ textarea.journal {
 .page-gains-label { text-align: center; font-family: var(--font-cinzel), serif; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--brass); margin-bottom: .6rem; }
 .page-gains { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
 .page-gains .gain { font-family: var(--font-cinzel), serif; font-size: .68rem; letter-spacing: .02em; color: var(--ink-on-parchment); background: rgba(176,141,87,.14); border: 1px solid var(--brass-dim); border-radius: 999px; padding: .22rem .6rem; }
+.page-gains .gain.gold { color: #8a6d12; border-color: rgba(201,162,39,.55); background: rgba(201,162,39,.16); }
 
 .ultimo-relato-label { text-align: center; font-family: var(--font-cinzel), serif; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); margin: 1.75rem 0 -.25rem; }
 

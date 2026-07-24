@@ -18,15 +18,19 @@ export default function DiaryPage() {
   const [submitting, setSubmitting] = useState(false);
   const [hasSession, setHasSession] = useState(false);
   const [lastPage, setLastPage] = useState<PageData | null>(null);
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
     supabase.auth.getUser().then(({ data }) => setHasSession(Boolean(data.user)));
+  }, []);
+
+  useEffect(() => {
     fetch("/api/diary-entries")
       .then((response) => (response.ok ? response.json() : null))
       .then((body: { pages?: PageData[] } | null) => setLastPage(body?.pages?.[0] ?? null))
       .catch(() => {});
-  }, []);
+  }, [refresh]);
 
   async function logout() {
     const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -40,7 +44,7 @@ export default function DiaryPage() {
       const response = await fetch("/api/diary-entries", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text, occurredAt: new Date().toISOString(), idempotencyKey: crypto.randomUUID() }) });
       const body = await response.json() as DiaryResult;
       if (!response.ok) throw new Error(body.error ?? "No se pudo registrar la página");
-      setResult(body); if (body.oracleStatus === "accepted") setText("");
+      setResult(body); if (body.oracleStatus === "accepted") { setText(""); setRefresh((value) => value + 1); }
     } catch (error) { setResult({ error: error instanceof Error ? error.message : "Error desconocido" }); }
     finally { setSubmitting(false); }
   }
@@ -56,7 +60,7 @@ export default function DiaryPage() {
     {hasSession
       ? <p className="session-status">Bienvenido, Aventurero — <button type="button" className="link-button" onClick={logout}>Cerrar sesión</button></p>
       : <p className="session-status"><Link href="/login">Iniciar sesión</Link></p>}
-    {hasSession && <StatsPanel />}
+    {hasSession && <StatsPanel refreshKey={refresh} />}
     <div className="parchment" style={{ padding: "1.5rem" }}>
       <form onSubmit={submit}>
         <label htmlFor="entry" className="entry-prompt">Relata tu aventura de hoy…</label>

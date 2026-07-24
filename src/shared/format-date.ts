@@ -17,7 +17,7 @@ export function formatAdventurerTimestamp(date: Date): { dateLine: string; timeL
   const minutes = String(date.getMinutes()).padStart(2, "0");
   const key = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   return {
-    dateLine: `Día ${dayName}, ${date.getDate()} de ${month} de la Edad ${date.getFullYear()}`,
+    dateLine: `${dayName} día ${date.getDate()} de la Época de ${month} de la Edad ${date.getFullYear()}`,
     timeLine: `las ${hours}:${minutes} hrs`,
     celestialEvent: CELESTIAL_MARKERS[key]
   };

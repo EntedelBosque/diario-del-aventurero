@@ -31,8 +31,8 @@ export function PageCard({ page, folio }: { page: PageData; folio?: number }) {
       <div className="page-divider"><span>◆</span></div>
       <div className="page-gains-label">En este relato</div>
       <div className="page-gains">
-        {gains.xp > 0 && <span className="gain">⚡ +{gains.xp} XP</span>}
-        {gains.coins > 0 && <span className="gain">🪙 +{gains.coins}</span>}
+        {gains.xp > 0 && <span className="gain">✨ +{gains.xp} XP</span>}
+        {gains.coins > 0 && <span className="gain gold">🟡 +{gains.coins} oro</span>}
         {gains.stats.map((stat) => <span key={stat.key} className="gain">{glossaryEntry(stat.key)?.emoji ?? "✦"} {glossaryEntry(stat.key)?.title ?? stat.key} +{stat.delta}</span>)}
         {gains.discoveries.length > 0 && <span className="gain">🗺️ {gains.discoveries.join(", ")}</span>}
         {gains.missions > 0 && <span className="gain">⚔️ {gains.missions} {gains.missions === 1 ? "misión" : "misiones"}</span>}

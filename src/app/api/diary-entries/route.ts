@@ -8,7 +8,7 @@ import { RunMotor } from "../../../core/application/run-motor.ts";
 import { SupabaseMotorRepository } from "../../../adapters/persistence/supabase-motor-repository.ts";
 import { SupabaseGameBalanceRepository } from "../../../adapters/persistence/supabase-game-balance-repository.ts";
 import { persistWorldEntities } from "../../../adapters/persistence/supabase-world-repository.ts";
-import { incrementPlayerStats, allocateStatGains } from "../../../adapters/persistence/supabase-player-repository.ts";
+import { incrementPlayerStats, allocateStatGains, bumpDiscipline } from "../../../adapters/persistence/supabase-player-repository.ts";
 import { calculateExperience } from "../../../core/domain/progression.ts";
 import type { OracleResponse } from "../../../core/domain/oracle-response.ts";
 
@@ -71,6 +71,7 @@ export async function POST(request: Request) {
         try {
           const statDeltas = allocateStatGains(effects.activities.map((activity) => ({ totalXp: activity.totalXp, classifications: activity.classifications as Array<{ stat: string; weight: number }> })));
           await incrementPlayerStats(entry.playerId, statDeltas);
+          await bumpDiscipline(entry.playerId, 1);
         } catch (error) {
           console.error("Player stat increment failed for entry", entry.id, error);
         }
