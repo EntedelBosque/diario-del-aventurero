@@ -2,6 +2,22 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-23 — Living World (títulos vigentes/archivo), Disciplina (DEV-SPEC-019), fix refresco
+
+- **Fix refresco:** los stats/disciplina no se veían sin cambiar de pestaña. Causa: caché del navegador
+  en los GET. Solución: `cache: "no-store"` en las llamadas a /api/player, /api/world y /api/diary-entries
+  (+ el refreshKey del StatsPanel que ya bumpea al enviar).
+- **DEV-SPEC-019 (Disciplina):** mi Fase 1 (+1/crónica, tope 100) ya coincidía. Añadí los **rangos
+  interpretativos** (Legendaria…Descuidada) en la UI. Fase 2 (recalculo 30 días + decay) requiere el
+  **Motor de Tiempo** (job programado) — misma infra que las notificaciones. Spec en `CODEX/DEV-SPEC-019-discipline.md`.
+- **Living World:** el **Título Vigente** de una entidad ahora es el alias más reciente (antes tomaba el
+  primero, bug); la ficha muestra el **Archivo de Honores** con los títulos previos.
+- **Nota sobre dev-specs:** Fernando confirmó que son guías; yo decido la solución técnica alineada a la
+  filosofía. (Ej.: título vigente = último alias; archivo = resto del arreglo `aliases`.)
+- **Diana/Seasons:** el mecanismo de autocorrección ya existe (el Oráculo respeta la semblanza actual y la
+  actualiza con nuevas entradas). Para corregir: escribir una entrada aclarando el hecho; no se reescribe
+  el pasado, se continúa. Pendiente mayor: modelar "Reino activo vs Archivo Histórico" (Eras) explícito.
+
 ## 2026-07-22 — Gremios con pertenencia/niveles, último relato, pie de ganancias
 
 - **Gremios ahora se "unen":** `guild-tiers.ts` — te unes a los **50** de afinidad; cada **+100** subes
