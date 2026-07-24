@@ -12,6 +12,7 @@ import { reputationRank } from "../../shared/reputation.ts";
 
 type Entity = { id: string; type: string; name: string; alias: string | null; aliases: string[]; category: string | null; description: string | null; discoveredAt: string; reputation: number };
 type Guild = { code: string; mastery: number };
+type HistoryRecord = { changeType: string; before: { title?: string; description?: string } | null; after: { title?: string; description?: string }; recordedAt: string };
 
 const TYPE_LABELS: Record<string, string> = {
   personaje: "Personajes", lugar: "Lugares", conocimiento: "Conocimientos",
@@ -24,7 +25,16 @@ export default function MundoPage() {
   const [guilds, setGuilds] = useState<Record<string, number>>({});
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Entity | null>(null);
+  const [history, setHistory] = useState<HistoryRecord[]>([]);
   const [term, setTerm] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selected) { setHistory([]); return; }
+    fetch(`/api/entity-history?id=${encodeURIComponent(selected.id)}`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: { history?: HistoryRecord[] } | null) => setHistory(body?.history ?? []))
+      .catch(() => setHistory([]));
+  }, [selected]);
 
   useEffect(() => {
     fetch("/api/world", { cache: "no-store" })
@@ -104,6 +114,15 @@ export default function MundoPage() {
         <p className="glossary-how"><span>Afinidad</span>{reputationRank(selected.reputation)} · {selected.reputation} {selected.reputation === 1 ? "aparición" : "apariciones"}</p>
         <p className="glossary-how"><span>Primera aparición</span>{formatAdventurerTimestamp(new Date(selected.discoveredAt)).dateLine}</p>
         {selected.aliases.length > 1 && <p className="glossary-how"><span>Archivo de Honores</span>{selected.aliases.slice(0, -1).map((title) => `«${title}»`).join(" · ")}</p>}
+        {history.length > 0 && <div className="entity-history">
+          <p className="glossary-how"><span>Historial (inmutable)</span></p>
+          <ul className="history-list">
+            {history.map((record, index) => <li key={index}>
+              <span className="history-what">{record.changeType === "titulo" ? `Nuevo título «${record.after.title}»` : "Semblanza actualizada"}</span>
+              <span className="history-date">{new Date(record.recordedAt).toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" })}</span>
+            </li>)}
+          </ul>
+        </div>}
         {selected.category && <p className="entity-tag">{TYPE_LABELS[selected.type] ?? selected.type} · {selected.category}</p>}
       </div>
     </div>}
