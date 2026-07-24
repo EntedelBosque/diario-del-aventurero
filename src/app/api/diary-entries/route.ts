@@ -9,6 +9,8 @@ import { SupabaseMotorRepository } from "../../../adapters/persistence/supabase-
 import { SupabaseGameBalanceRepository } from "../../../adapters/persistence/supabase-game-balance-repository.ts";
 import { persistWorldEntities } from "../../../adapters/persistence/supabase-world-repository.ts";
 import { incrementPlayerStats, allocateStatGains, bumpDiscipline } from "../../../adapters/persistence/supabase-player-repository.ts";
+import { RunDirector } from "../../../core/application/run-director.ts";
+import { SupabaseDirectorRepository } from "../../../adapters/persistence/supabase-director-repository.ts";
 import { calculateExperience } from "../../../core/domain/progression.ts";
 import type { OracleResponse } from "../../../core/domain/oracle-response.ts";
 
@@ -74,6 +76,12 @@ export async function POST(request: Request) {
           await bumpDiscipline(entry.playerId, 1);
         } catch (error) {
           console.error("Player stat increment failed for entry", entry.id, error);
+        }
+        // DEV-SPEC-018: el Director observa el estado y registra propuestas (nunca ejecuta).
+        try {
+          await new RunDirector(new SupabaseDirectorRepository()).execute(entry.playerId);
+        } catch (error) {
+          console.error("Director run failed for entry", entry.id, error);
         }
       } catch (error) {
         motorError = error instanceof Error ? error.message : "El Motor no pudo procesar la entrada";
