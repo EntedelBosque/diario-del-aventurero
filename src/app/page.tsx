@@ -3,14 +3,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
-import { formatAdventurerTimestamp } from "../shared/format-date.ts";
-import { guildName } from "../shared/guilds.ts";
 import { QuillIcon } from "../shared/icons/QuillIcon.tsx";
 import { BottomNav } from "./BottomNav.tsx";
 import { StatsPanel } from "./StatsPanel.tsx";
-import { PageCard, type PageData } from "./PageCard.tsx";
+import { PageCard, type PageData, type PageGains } from "./PageCard.tsx";
 
-type DiaryResult = { title?: string; narrative?: string; occurredAt?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string; rewards?: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> } };
+type DiaryResult = { id?: string; title?: string; narrative?: string; occurredAt?: string; oracleStatus?: string; error?: string; oracleErrors?: string[]; motorError?: string; rewards?: { totalXp: number; guildAwards: Array<{ guildCode: string; experience: number }> }; gains?: PageGains };
 
 export default function DiaryPage() {
   const [text, setText] = useState("");
@@ -49,7 +47,6 @@ export default function DiaryPage() {
     finally { setSubmitting(false); }
   }
 
-  const timestamp = result?.occurredAt ? formatAdventurerTimestamp(new Date(result.occurredAt)) : null;
   const failed = result && (result.error || result.oracleStatus === "failed" || result.oracleStatus === "rejected");
 
   return <main>
@@ -71,26 +68,10 @@ export default function DiaryPage() {
     {result && (failed ? (
       <section className="result error">{result.error ?? result.oracleErrors?.join(", ") ?? `La página no pudo completarse (${result.oracleStatus}).`}</section>
     ) : (
-      <article className="parchment page-card">
-        {timestamp && <div className="page-timestamp">
-          {timestamp.celestialEvent && <span className="celestial">{timestamp.celestialEvent}</span>}
-          <span className="ts-date">{timestamp.dateLine}</span>
-          <span className="ts-time">{timestamp.timeLine}</span>
-        </div>}
-        {result.title && <h2 className="page-title">{result.title}</h2>}
-        <div className="page-divider"><span>◆</span></div>
-        <p className="page-narrative">{result.narrative}</p>
-        {result.rewards && <>
-          <div className="page-divider"><span>◆</span></div>
-          <div className="page-rewards">
-            <div className="reward-xp"><span className="reward-label">Experiencia</span><strong>+{result.rewards.totalXp}</strong><span className="reward-unit">XP</span></div>
-            {result.rewards.guildAwards.length > 0 && <div className="guild-chips">
-              {result.rewards.guildAwards.map((award) => <span key={award.guildCode} className="guild-chip">{guildName(award.guildCode)}<em>+{award.experience}</em></span>)}
-            </div>}
-          </div>
-        </>}
+      <>
+        <PageCard page={{ id: result.id ?? "fresh", title: result.title, narrative: result.narrative ?? "", occurredAt: result.occurredAt ?? new Date().toISOString(), gains: result.gains }} />
         {result.motorError && <p className="error">Aviso: el progreso del juego no se aplicó ({result.motorError}).</p>}
-      </article>
+      </>
     ))}
     {!result && lastPage && <>
       <p className="ultimo-relato-label">📖 Tu último relato…</p>

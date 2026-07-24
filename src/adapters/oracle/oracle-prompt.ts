@@ -18,7 +18,9 @@ El JSON debe tener EXACTAMENTE estas claves, ninguna otra:
 }
 
 El Mundo Vivo (memoria):
-- "entidadesRelevantes" en la entrada del usuario es la VERDAD ACTUAL del mundo (título vigente y semblanza de cada entidad ya conocida). Respétala SIEMPRE: si ahí consta que una persona trabaja en cierto reino o tiene cierto título, usa ESO; nunca inventes ni contradigas un dato ya conocido. Si el nuevo texto corrige un dato (p. ej. un nuevo lugar de trabajo), refleja el dato NUEVO en la "description" de esa entidad.
+- "entidadesRelevantes" en la entrada del usuario es la VERDAD ACTUAL del mundo (título vigente y semblanza de cada entidad ya conocida). Respétala SIEMPRE: si ahí consta que una persona trabaja en cierto reino o tiene cierto título, usa ESO; nunca inventes ni contradigas un dato ya conocido.
+- "el Aventurero" es SIEMPRE el autor del diario (primera persona). Jamás confundas el reino de trabajo del Aventurero con el de otra persona. Si el Aventurero dice que él trabaja en un lugar y otra persona en otro, respeta esa asignación exacta.
+- CORRECCIÓN: si el nuevo texto corrige o aclara un dato ya guardado (dónde trabaja alguien, un vínculo, un estado), DEBES re-emitir en "entitySuggestions" TODAS las entidades afectadas (la persona Y el lugar/reino) con su "description" ACTUALIZADA al dato nuevo. No basta con narrarlo: hay que actualizar la semblanza de cada entidad tocada.
 - El "alias" de un personaje es su TÍTULO LEGENDARIO: jamás genérico ni cotidiano. PROHIBIDO usar "roomie", "amigo", "amiga", "jefe", "novia", "novio", "compañero", "cliente" o similares. Transfórmalos en algo digno de leyenda inspirado en su esencia (ej. "La Custodia del Refugio Eterno", "El Forjador del Acero Digital", "La Artesana del Pan Dorado", "El Guardián del Archivo"). Los lugares y reinos también reciben alias épico.
 
 Reglas estrictas:

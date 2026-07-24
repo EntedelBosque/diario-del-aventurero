@@ -24,7 +24,7 @@ function computePageGains(response: OracleResponse) {
   }
   const statDeltas = allocateStatGains(activities);
   return {
-    xp, coins: xp,
+    xp, coins: xp, discipline: 1,
     stats: Object.entries(statDeltas).map(([key, delta]) => ({ key, delta })),
     discoveries: response.entitySuggestions.map((entity) => entity.alias ?? entity.name),
     missions: response.contractEvidence.length,
@@ -81,7 +81,8 @@ export async function POST(request: Request) {
       }
     }
 
-    return withSessionCookies(NextResponse.json({ id: entry.id, oracleStatus: entry.oracleStatus, title: entry.oracleResponse?.title, narrative: entry.oracleResponse?.narrative, occurredAt: entry.occurredAt.toISOString(), oracleErrors: entry.oracleErrors, motorError, rewards }), session.cookiesToSet);
+    const gains = (rewards && entry.oracleResponse) ? { ...computePageGains(entry.oracleResponse), guilds: rewards.guildAwards } : undefined;
+    return withSessionCookies(NextResponse.json({ id: entry.id, oracleStatus: entry.oracleStatus, title: entry.oracleResponse?.title, narrative: entry.oracleResponse?.narrative, occurredAt: entry.occurredAt.toISOString(), oracleErrors: entry.oracleErrors, motorError, rewards, gains }), session.cookiesToSet);
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 });
   }

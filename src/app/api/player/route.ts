@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getAuthenticatedUser, withSessionCookies } from "../session.ts";
 import { createServiceSupabaseClient } from "../../../adapters/persistence/supabase-server.ts";
 
+export const dynamic = "force-dynamic";
+
 const STAT_ORDER = ["arte", "tecnologia", "vitalidad", "social", "sabiduria", "disciplina"];
 
 export async function GET() {
