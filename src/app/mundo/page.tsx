@@ -27,14 +27,14 @@ export default function MundoPage() {
   const [term, setTerm] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/world")
+    fetch("/api/world", { cache: "no-store" })
       .then(async (response) => {
         const body = await response.json() as { entities?: Entity[]; error?: string };
         if (!response.ok) throw new Error(body.error ?? "No se pudo cargar el mundo");
         setEntities(body.entities ?? []);
       })
       .catch((cause) => setError(cause instanceof Error ? cause.message : "Error desconocido"));
-    fetch("/api/player")
+    fetch("/api/player", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((summary: { guilds?: Guild[] } | null) => {
         const map: Record<string, number> = {};
@@ -103,6 +103,7 @@ export default function MundoPage() {
         <p className="glossary-body">{selected.description ?? "Su leyenda aún no ha sido escrita. Se revelará conforme lo nombres en tus relatos."}</p>
         <p className="glossary-how"><span>Afinidad</span>{reputationRank(selected.reputation)} · {selected.reputation} {selected.reputation === 1 ? "aparición" : "apariciones"}</p>
         <p className="glossary-how"><span>Primera aparición</span>{formatAdventurerTimestamp(new Date(selected.discoveredAt)).dateLine}</p>
+        {selected.aliases.length > 1 && <p className="glossary-how"><span>Archivo de Honores</span>{selected.aliases.slice(0, -1).map((title) => `«${title}»`).join(" · ")}</p>}
         {selected.category && <p className="entity-tag">{TYPE_LABELS[selected.type] ?? selected.type} · {selected.category}</p>}
       </div>
     </div>}

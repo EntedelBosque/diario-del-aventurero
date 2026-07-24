@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { guildName } from "../shared/guilds.ts";
 import { guildTier } from "../shared/guild-tiers.ts";
+import { disciplineRank } from "../shared/discipline.ts";
 import { GlossaryModal } from "./GlossaryModal.tsx";
 
 type Stat = { key: string; label: string; value: number };
@@ -14,7 +15,7 @@ export function StatsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
   const [term, setTerm] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/player")
+    fetch("/api/player", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((summary) => setData(summary as Summary | null))
       .catch(() => {});
@@ -38,7 +39,7 @@ export function StatsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
       {data.stats.map((stat) => <button key={stat.key} type="button" className="stat-tile" onClick={() => setTerm(stat.key)}>
         <span className="stat-label">{stat.label}</span>
         <span className="stat-value">{stat.value.toLocaleString("es-MX")}</span>
-        {stat.key === "disciplina" && <div className="stat-bar"><div style={{ width: `${Math.max(0, Math.min(100, stat.value))}%` }} /></div>}
+        {stat.key === "disciplina" && <><div className="stat-bar"><div style={{ width: `${Math.max(0, Math.min(100, stat.value))}%` }} /></div><span className="stat-rank">{disciplineRank(stat.value)}</span></>}
       </button>)}
     </div>
     {(() => {

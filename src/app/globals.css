@@ -148,6 +148,7 @@ textarea.journal {
 .stat-value { font-family: var(--font-cinzel), serif; font-size: 1.05rem; color: var(--ink-on-parchment); }
 .stat-bar { height: 4px; border-radius: 2px; background: rgba(0,0,0,.14); margin-top: .25rem; overflow: hidden; }
 .stat-bar > div { height: 100%; background: var(--burgundy); }
+.stat-rank { font-family: var(--font-garamond), serif; font-style: italic; font-size: .58rem; color: var(--brass); margin-top: .15rem; }
 .stats-guilds { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .9rem; }
 
 /* Biblioteca de Relatos: tomos por Edad (año) y Época (mes) */

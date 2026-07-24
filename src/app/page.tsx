@@ -26,7 +26,7 @@ export default function DiaryPage() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/diary-entries")
+    fetch("/api/diary-entries", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((body: { pages?: PageData[] } | null) => setLastPage(body?.pages?.[0] ?? null))
       .catch(() => {});
