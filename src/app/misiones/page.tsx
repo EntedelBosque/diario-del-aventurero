@@ -33,8 +33,8 @@ export default function MisionesPage() {
     </div>
 
     {error && <section className="result error">{error}</section>}
-    {!error && contracts === null && <p className="relatos-hint">Consultando el tablón de pactos…</p>}
-    {contracts !== null && contracts.length === 0 && <p className="relatos-hint">No hay misiones forjadas todavía. El Director del Juego las propondrá conforme tu historia avance.</p>}
+    {!error && contracts === null && <p className="relatos-hint">Consultando el tablón de los pactos…</p>}
+    {contracts !== null && contracts.length === 0 && <p className="relatos-hint">El tablón de los pactos aún está vacío. Los designios del destino forjarán tus misiones conforme tu leyenda se alce.</p>}
 
     {groups.map((group) => <div key={group.state} className="collection-group">
       <h2>{STATE_LABELS[group.state] ?? group.state} · {group.items.length}</h2>

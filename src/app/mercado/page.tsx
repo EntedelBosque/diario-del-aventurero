@@ -29,13 +29,14 @@ export default function MercadoPage() {
     {error && <section className="result error">{error}</section>}
     {!error && market === null && <p className="relatos-hint">Abriendo las puertas del bazar…</p>}
 
+
     {market && <>
       <div className="wallet parchment">
         <span className="coins">{market.balance.toLocaleString("es-MX")}</span>
-        <span className="coins-label">Monedas del Aventurero</span>
+        <span className="coins-label">Oro del Aventurero</span>
       </div>
       {market.rewards.length === 0
-        ? <p className="relatos-hint">El bazar aún no ofrece recompensas. Aquí podrás canjear tus monedas por premios reales cuando los definas.</p>
+        ? <p className="relatos-hint">El bazar aún no despliega sus tesoros. Aquí trocarás tu oro por recompensas del mundo real cuando decretes cuáles serán.</p>
         : <div className="collection-list">
             {market.rewards.map((reward) => <div key={reward.id} className="card-row">
               <span className="row-title">{reward.name}</span>

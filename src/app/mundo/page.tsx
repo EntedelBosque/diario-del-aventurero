@@ -8,8 +8,9 @@ import { OFFICIAL_GUILD_CODES } from "../../core/domain/guilds.ts";
 import { guildName } from "../../shared/guilds.ts";
 import { guildTier } from "../../shared/guild-tiers.ts";
 import { glossaryEntry } from "../../shared/glossary.ts";
+import { reputationRank } from "../../shared/reputation.ts";
 
-type Entity = { id: string; type: string; name: string; alias: string | null; aliases: string[]; category: string | null; description: string | null; discoveredAt: string };
+type Entity = { id: string; type: string; name: string; alias: string | null; aliases: string[]; category: string | null; description: string | null; discoveredAt: string; reputation: number };
 type Guild = { code: string; mastery: number };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -64,7 +65,7 @@ export default function MundoPage() {
         {OFFICIAL_GUILD_CODES.map((code) => {
           const mastery = guilds[code] ?? 0;
           const tier = guildTier(mastery);
-          const status = tier.joined ? (tier.tierName ? `Miembro · ${tier.tierName}` : "Miembro") : `Faltan ${tier.nextAt - mastery} para unirte`;
+          const status = tier.joined ? (tier.tierName ? `Miembro · ${tier.tierName}` : "Miembro jurado") : `A ${tier.nextAt - mastery} de jurar lealtad`;
           return <button key={code} type="button" className={`affinity-row${tier.joined ? " joined" : ""}`} onClick={() => setTerm(code)}>
             <span className="affinity-emoji" aria-hidden="true">{glossaryEntry(code)?.emoji ?? "⚜️"}</span>
             <span className="affinity-body">
@@ -79,8 +80,8 @@ export default function MundoPage() {
     </div>
 
     {error && <section className="result error">{error}</section>}
-    {!error && entities === null && <p className="relatos-hint">Desplegando el mapa…</p>}
-    {entities !== null && entities.length === 0 && <p className="relatos-hint">El mundo aún está por descubrirse. Cada persona, lugar o saber que menciones en tu diario quedará grabado aquí.</p>}
+    {!error && entities === null && <p className="relatos-hint">Desplegando los mapas del reino…</p>}
+    {entities !== null && entities.length === 0 && <p className="relatos-hint">Las tierras del reino aún aguardan ser cartografiadas. Cada alma, paraje o saber que nombres en tus relatos quedará grabado en esta memoria.</p>}
 
     {groups.map((group) => <div key={group.type} className="collection-group">
       <h2>{TYPE_LABELS[group.type] ?? group.type} · {group.items.length}</h2>
@@ -88,7 +89,7 @@ export default function MundoPage() {
         {group.items.map((entity) => <button key={entity.id} type="button" className="card-row" onClick={() => setSelected(entity)}>
           <span className="row-title">{entity.name}</span>
           {entity.alias && <span className="row-alias">«{entity.alias}»</span>}
-          {entity.category && <span className="row-meta">{entity.category}</span>}
+          <span className="row-meta">{[entity.category, reputationRank(entity.reputation)].filter(Boolean).join(" · ")}</span>
         </button>)}
       </div>
     </div>)}
@@ -99,7 +100,8 @@ export default function MundoPage() {
         <h3 className="glossary-title">{selected.name}</h3>
         {selected.alias && <p className="entity-alias">«{selected.alias}»</p>}
         <div className="page-divider"><span>◆</span></div>
-        <p className="glossary-body">{selected.description ?? "Aún no hay una semblanza. Se irá escribiendo conforme lo menciones en tus relatos."}</p>
+        <p className="glossary-body">{selected.description ?? "Su leyenda aún no ha sido escrita. Se revelará conforme lo nombres en tus relatos."}</p>
+        <p className="glossary-how"><span>Afinidad</span>{reputationRank(selected.reputation)} · {selected.reputation} {selected.reputation === 1 ? "aparición" : "apariciones"}</p>
         <p className="glossary-how"><span>Primera aparición</span>{formatAdventurerTimestamp(new Date(selected.discoveredAt)).dateLine}</p>
         {selected.category && <p className="entity-tag">{TYPE_LABELS[selected.type] ?? selected.type} · {selected.category}</p>}
       </div>
