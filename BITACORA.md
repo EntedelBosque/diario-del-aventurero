@@ -2,6 +2,22 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-23 (cont.) — DEV-SPEC-020: Estado Vigente + Historial inmutable
+
+- **Implementado sin migración** sobre `entity_history` (append-only, trigger anti-borrado). Cada cambio de
+  **Título Vigente** o **semblanza** inserta un registro (before/after + evento fuente + fecha).
+- `getEntityHistory` + `GET /api/entity-history` (scoped al dueño). La ficha de Mundo muestra **Estado
+  Vigente** (título + semblanza), **Archivo de Honores** y la **línea de tiempo del Historial** con fechas.
+- El Oráculo sigue usando SOLO el Estado Vigente (nunca el Historial) — ya estaba así por el contexto.
+
+### Decisión: Reino Activo estructurado se difiere hasta el Director
+- **Por qué:** el reino actual de una persona vive hoy en su semblanza vigente (que el Oráculo corrige) y
+  se archiva en `entity_history` al cambiar. Modelarlo como relación de primera clase (fechas propias) exige
+  el Director del Juego para disparar/aprobar transiciones, que aún no está cableado. DEV-SPEC-020 deja el
+  "cuándo" al Director.
+- **Cómo aplica:** cuando exista el Director, promover a `entity_relationships` con inicio/fin/motivo.
+- **Fecha:** 2026-07-23
+
 ## 2026-07-23 (cont.) — Reseña unificada + corrección de reinos
 
 - **Reseña unificada:** la tarjeta que sale al enviar ahora es la misma `PageCard` que en Relatos, con
