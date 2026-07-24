@@ -2,6 +2,25 @@
 > Registro cronológico por sesión (más reciente arriba). El *qué* y sobre todo el *porqué*.
 > La mantiene la skill `bitacora` (`.claude/skills/bitacora/`).
 
+## 2026-07-23 (cont.) — FOUNDATION: Event Engine (017) + Director (018) cableados
+
+- **Event Engine:** `emitEvent` escribe eventos tipados en `world_events` (el log del mundo, registrado
+  antes de procesar). Se emiten `EntityDiscovered`/`EntityEvolved` desde la memoria del mundo. Sin migración.
+- **Director:** ¡el dominio `evaluateGameDirector` YA existía y estaba probado, pero NO cableado! Se
+  construyó el hueco: `RunDirector` (app) + `SupabaseDirectorRepository` que carga el snapshot real
+  (contratos activos, bosses, categorías descuidadas por stats, disciplina→recovery, señal estacional
+  por solsticio/equinoccio) y persiste `director_observations` + `director_proposals`. El Director SOLO
+  observa y PROPONE, nunca ejecuta. Dedup evita propuestas repetidas. Corre best-effort tras cada entrada.
+
+### Decisión: reutilizar tablas/dominio existentes; el Director no ejecuta
+- **Por qué:** `world_events` ya es el log de eventos; `evaluateGameDirector` ya tenía la lógica; las
+  tablas director_* ya existían con los 5 tipos de propuesta. Cero migración. Casi cometo un duplicado
+  (`director.ts` nuevo) — corregido al ver `game-director.ts` + su test.
+- **Cómo aplica:** las propuestas quedan como 'propuesta' en `director_proposals`; su EJECUCIÓN
+  (generar misiones/contratos reales, transiciones de Reino/Título de 020) es el siguiente paso y
+  depende de los criterios que definirá el Game Designer en docs futuros.
+- **Fecha:** 2026-07-23
+
 ## 2026-07-23 (cont.) — 5 dev-specs de arquitectura recibidos (014–018)
 
 - Guardados como canon en `CODEX/`: **014 Logros**, **015 Compartir**, **016 Cuervo (notificaciones)**,
